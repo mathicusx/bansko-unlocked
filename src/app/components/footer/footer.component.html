@@ -1,0 +1,39 @@
+<footer class="site-footer">
+  <div class="footer-content">
+    <!-- Social Media Icons -->
+    <div class="social-icons">
+      <button class="social-icon facebook" (click)="openSocialLink('facebook')" [attr.aria-label]="copy.facebookAria">
+        <mat-icon>facebook</mat-icon>
+      </button>
+
+      <button class="social-icon instagram" (click)="openSocialLink('instagram')" [attr.aria-label]="copy.instagramAria">
+        <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" class="social-icon-img">
+      </button>
+
+      <button class="social-icon youtube" (click)="openSocialLink('youtube')" [attr.aria-label]="copy.youtubeAria">
+        <mat-icon>smart_display</mat-icon>
+      </button>
+    </div>
+
+    <!-- Contact (visible NAP — must match JSON-LD telephone/email) -->
+    <address class="footer-contact">
+      <a class="footer-contact__link" href="mailto:info@banskounlocked.com" (click)="trackEmailClick()">
+        <mat-icon>email</mat-icon>
+        <span>info&#64;banskounlocked.com</span>
+      </a>
+      <a class="footer-contact__link" href="tel:+447472362817" (click)="trackCallClick()">
+        <mat-icon>call</mat-icon>
+        <span>+44 747 236 2817</span>
+      </a>
+      <a class="footer-contact__link" href="tel:+359894494126" (click)="trackCallClick()">
+        <mat-icon>call</mat-icon>
+        <span>+359 89 449 4126</span>
+      </a>
+    </address>
+
+    <!-- Copyright -->
+    <div class="copyright">
+      <p>{{ copy.copyright }}</p>
+    </div>
+  </div>
+</footer>

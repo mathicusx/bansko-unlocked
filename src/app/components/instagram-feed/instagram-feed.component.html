@@ -1,0 +1,59 @@
+<section class="ig-feed" aria-labelledby="ig-feed-heading">
+  <div class="ig-feed__inner">
+    <header class="ig-feed__header">
+      @if (headingLevel === 'h3') {
+        <h3 id="ig-feed-heading" class="ig-feed__title">{{ copy.heading }}</h3>
+      } @else {
+        <h2 id="ig-feed-heading" class="ig-feed__title">{{ copy.heading }}</h2>
+      }
+      <p class="ig-feed__lede">{{ copy.lede }}</p>
+    </header>
+
+    <ul class="ig-feed__grid">
+      @for (post of feed; track post.image; let i = $index) {
+        <li class="ig-feed__cell">
+          <a
+            class="ig-feed__tile"
+            [href]="post.permalink"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="viewAria(post)"
+            (click)="trackTileClick(post, i)"
+          >
+            <img
+              class="ig-feed__img"
+              [src]="post.image"
+              [alt]="post.alt"
+              width="640"
+              height="640"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="ig-feed__overlay" aria-hidden="true">
+              @if (post.type === 'video') {
+                <mat-icon class="ig-feed__type">play_circle</mat-icon>
+              } @else if (post.type === 'carousel') {
+                <mat-icon class="ig-feed__type">collections</mat-icon>
+              }
+              @if (post.caption) {
+                <span class="ig-feed__caption">{{ post.caption }}</span>
+              }
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+
+    <a
+      class="ig-feed__follow"
+      [href]="profileUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+      (click)="trackFollowClick()"
+    >
+      <mat-icon aria-hidden="true">photo_camera</mat-icon>
+      <span>{{ copy.follow }}</span>
+      <span class="ig-feed__handle">{{ handle }}</span>
+    </a>
+  </div>
+</section>

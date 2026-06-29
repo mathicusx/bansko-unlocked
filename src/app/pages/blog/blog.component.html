@@ -1,0 +1,37 @@
+<section class="blog">
+  <div class="blog__intro">
+    <h1>{{ ui.h1 }}</h1>
+    <p>{{ ui.intro }}</p>
+  </div>
+
+  <div class="blog__grid" *ngIf="posts.length > 0; else emptyState">
+    <article class="blog-card" *ngFor="let post of posts">
+      <a [routerLink]="['/blog', post.slug]" class="blog-card__link">
+        <div class="blog-card__media">
+          <img
+            [src]="post.heroImage"
+            [alt]="post.heroAlt"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="blog-card__body">
+          <p class="blog-card__meta">
+            <time [attr.datetime]="post.publishedDate">
+              {{ post.publishedDate | date: 'longDate' }}
+            </time>
+            <span>·</span>
+            <span>{{ readingMinutes(post) }} {{ ui.minRead }}</span>
+          </p>
+          <h2 class="blog-card__title">{{ post.title }}</h2>
+          <p class="blog-card__excerpt">{{ post.description }}</p>
+          <span class="blog-card__cta">{{ ui.readMore }}</span>
+        </div>
+      </a>
+    </article>
+  </div>
+
+  <ng-template #emptyState>
+    <p class="blog__empty">{{ ui.empty }}</p>
+  </ng-template>
+</section>

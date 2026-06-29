@@ -1,0 +1,180 @@
+@import '../../shared/styles/mixins';
+
+.site-footer {
+  background: linear-gradient(145deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  border-top: 2px solid var(--brand-primary);
+  @include text-primary;
+  padding: 2rem 0 1.5rem 0;
+  margin-top: auto;
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+    
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      
+      .social-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid var(--bg-tertiary);
+        background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+        @include text-primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        @include theme-transition;
+        box-shadow: 0 4px 15px var(--shadow);
+        position: relative;
+        overflow: hidden;
+        
+        // Enhanced base state for better visibility
+        &:not(:hover) {
+          mat-icon {
+            opacity: 0.9;
+            
+            [data-theme="light"] & {
+              opacity: 0.8;
+            }
+          }
+        }
+        
+        mat-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+          @include theme-transition;
+        }
+        
+        .social-icon-img {
+          width: 1.5rem;
+          height: 1.5rem;
+          @include theme-transition;
+          opacity: 0.9;
+          
+          // Default (dark theme) - white icons
+          filter: brightness(0) invert(1);
+        }
+        
+        // Light theme - dark icons
+        [data-theme="light"] & .social-icon-img {
+          filter: brightness(0) invert(0) !important;
+          opacity: 0.8 !important;
+        }
+        
+        &.facebook {
+          border-color: #1877f2;
+          background: linear-gradient(145deg, #1877f2, #166fe5);
+          box-shadow: 0 8px 25px rgba(24, 119, 242, 0.4);
+          
+          mat-icon {
+            color: #ffffff;
+          }
+        }
+        
+        &.instagram {
+          border-color: #e4405f;
+          background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+          box-shadow: 0 8px 25px rgba(228, 64, 95, 0.4);
+          
+          .social-icon-img {
+            filter: brightness(0) invert(1);
+            opacity: 1;
+          }
+        }
+        
+        &.youtube {
+          border-color: #ff0000;
+          background: linear-gradient(145deg, #ff0000, #cc0000);
+          box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
+          
+          mat-icon {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+    
+    .footer-contact {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.25rem;
+      font-style: normal;
+
+      &__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        @include text-secondary;
+        text-decoration: none;
+        font-size: 0.9rem;
+        letter-spacing: 0.3px;
+        opacity: 0.9;
+        @include theme-transition;
+
+        mat-icon {
+          font-size: 1.05rem;
+          width: 1.05rem;
+          height: 1.05rem;
+        }
+
+        &:hover {
+          @include text-primary;
+          opacity: 1;
+        }
+      }
+    }
+
+    .copyright {
+      border-top: 1px solid var(--bg-tertiary);
+      padding-top: 1.5rem;
+      
+      p {
+        @include text-secondary;
+        opacity: 0.7;
+        font-size: 0.9rem;
+        margin: 0;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+  
+  // Mobile responsiveness
+  @media (max-width: 768px) {
+    padding: 1.5rem 0 1rem 0;
+    
+    .footer-content {
+      padding: 0 1rem;
+      
+      .social-icons {
+        gap: 1.5rem;
+        
+        .social-icon {
+          width: 45px;
+          height: 45px;
+          
+          mat-icon {
+            font-size: 1.3rem;
+            width: 1.3rem;
+            height: 1.3rem;
+          }
+        }
+      }
+      
+      .copyright {
+        p {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}

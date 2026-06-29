@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bansko Unlocked | ATV & Buggy Tours, Shooting, Camping & Snow Riding</title>
+    <meta
+      name="description"
+      content="Bansko Unlocked — adventure activities in Bansko, Bulgaria. ATV & buggy tours, a shooting range, mountain camping and winter snow riding in the Pirin Mountains. Book your Bansko adventure."
+    />
+    <meta
+      name="keywords"
+      content="Bansko activities, Bansko ATV tours, buggy tours Bansko, shooting range Bansko, camping Bansko, snow riding Bansko, Pirin Mountains adventures, things to do in Bansko, Bansko Bulgaria adventure"
+    />
+    <!-- TODO(deploy): replace with the Bansko Unlocked Search Console token. -->
+    <meta name="google-site-verification" content="" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Bansko Unlocked" />
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href="https://banskounlocked.com/" />
+
+    <!-- Favicon - Multiple formats and sizes for better browser/search engine support -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16 32x32" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" href="favicon.ico" />
+
+    <!-- Facebook/Instagram Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://banskounlocked.com/" />
+    <meta
+      property="og:title"
+      content="Bansko Unlocked — Adventure Activities in Bansko, Bulgaria"
+    />
+    <meta
+      property="og:description"
+      content="ATV & buggy tours, shooting range, mountain camping and winter snow riding in Bansko's Pirin Mountains. Unlock your Bansko adventure."
+    />
+    <meta
+      property="og:image"
+      content="https://banskounlocked.com/assets/og/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Bansko Unlocked — ATV & buggy tours, shooting, camping and snow riding in the Pirin Mountains" />
+    <meta property="og:site_name" content="Bansko Unlocked" />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bansko Unlocked — Adventure Activities in Bansko, Bulgaria" />
+    <meta name="twitter:description" content="ATV & buggy tours, shooting range, mountain camping and winter snow riding in Bansko's Pirin Mountains. Unlock your Bansko adventure." />
+    <meta name="twitter:image" content="https://banskounlocked.com/assets/og/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Bansko Unlocked — adventure activities in the Pirin Mountains" />
+
+    <!-- Geographic targeting -->
+    <meta name="geo.region" content="BG-01" />
+    <meta name="geo.placename" content="Bansko, Pirin Mountains" />
+    <meta name="geo.position" content="41.8358;23.4875" />
+    <meta name="ICBM" content="41.8358, 23.4875" />
+
+    <!-- Theme color for mobile / PWA -->
+    <meta name="theme-color" content="#0b1f2a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4fafb" media="(prefers-color-scheme: light)" />
+
+    <!-- Performance: preconnect/dns-prefetch for third-party origins used on the page.
+         Lighthouse warns past 4 preconnects, so only the critical-path origins get a
+         full preconnect; the rest fall back to the cheaper dns-prefetch. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <!-- connect.facebook.net is only hit on idle (deferred Pixel load) — dns-prefetch is enough. -->
+    <link rel="dns-prefetch" href="https://connect.facebook.net" />
+    <link rel="dns-prefetch" href="https://www.facebook.com" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://www.paypal.com" />
+
+    <!-- Bing Webmaster Tools verified via "Import from Google Search Console" — 2026-05-19.
+         No msvalidate.01 meta tag needed. If re-verifying outside the GSC import path,
+         add: <meta name="msvalidate.01" content="..." />.
+         Yandex Webmaster still pending (low priority — RU is 0 clicks per GSC). -->
+
+    <!-- Google Analytics 4 (gtag.js) — base only. send_page_view is disabled so that
+         page_view events come from AnalyticsService on Angular Router NavigationEnd,
+         giving accurate SPA tracking. Skips /admin/* paths. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9JNLT40KB6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9JNLT40KB6', { send_page_view: false });
+    </script>
+
+    <!-- Meta Pixel — TBT-friendly two-stage init.
+         1. Set up `window.fbq` immediately as a queueing stub so PixelService
+            can call fbq('track', ...) the moment it boots — calls land in the
+            queue and replay once the library loads.
+         2. Defer the 101 KB fbevents.js fetch + `fbq('init', ...)` to idle
+            time so it stops competing with hydration / LCP. The initial
+            PageView is fired by PixelService on first NavigationEnd, so
+            timing doesn't depend on the library being loaded synchronously. -->
+    <script>
+      // Write _fbc NOW — synchronously, before iOS Safari 17+ Link Tracking
+      // Protection or Angular's router can strip fbclid from the URL, and before
+      // the first PageView fires. By the time fbevents.js loads (idle callback +
+      // network) the parameter is gone on iOS, so we persist it ourselves here.
+      // Don't clobber an existing _fbc. Format: fb.1.<creationTime>.<fbclid>.
+      (function () {
+        try {
+          var m = location.search.match(/[?&]fbclid=([^&]+)/);
+          if (m && document.cookie.indexOf("_fbc=") === -1) {
+            var fbc = "fb.1." + Date.now() + "." + decodeURIComponent(m[1]);
+            var exp = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
+            document.cookie = "_fbc=" + fbc + "; path=/; expires=" + exp + "; SameSite=Lax";
+          }
+        } catch (e) {}
+      })();
+
+      (function (f) {
+        if (f.fbq) return;
+        var n = (f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        });
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+      })(window);
+      function __loadFbPixel() {
+        if (document.getElementById("fb-pixel-lib")) return;
+        var t = document.createElement("script");
+        t.id = "fb-pixel-lib";
+        t.async = true;
+        t.src = "https://connect.facebook.net/en_US/fbevents.js";
+        t.onload = function () {
+          // Init only. PixelService is the single source of PageView (fired on
+          // every NavigationEnd, incl. the first); its call queues in the fbq
+          // stub and replays here with a shared eventID once the library loads,
+          // so browser + CAPI dedupe. Firing PageView here too would double-count
+          // the landing view (the queued one + this one carry different IDs).
+          window.fbq("init", "780880514467909");
+        };
+        document.head.appendChild(t);
+      }
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(__loadFbPixel, { timeout: 3000 });
+      } else {
+        setTimeout(__loadFbPixel, 2000);
+      }
+    </script>
+    <!-- End Meta Pixel Code -->
+
+    <!-- Global Structured Data - schema.org @graph for Google Search Console -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://banskounlocked.com/#organization",
+            "name": "Bansko Unlocked",
+            "url": "https://banskounlocked.com",
+            "logo": {
+              "@type": "ImageObject",
+              "@id": "https://banskounlocked.com/#logo",
+              "url": "https://banskounlocked.com/assets/logo/bansko-unlocked-logo.png",
+              "width": 400,
+              "height": 120,
+              "caption": "Bansko Unlocked"
+            },
+            "image": { "@id": "https://banskounlocked.com/#logo" },
+            "description": "Adventure activities in Bansko, Bulgaria — ATV & buggy tours, a shooting range, mountain camping and winter snow riding in the Pirin Mountains.",
+            "email": "info@banskounlocked.com",
+            "telephone": ["+44-7472362817", "+359-894494126"],
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Pirin Mountains Region",
+              "addressLocality": "Bansko",
+              "addressRegion": "Blagoevgrad Province",
+              "postalCode": "2770",
+              "addressCountry": "BG"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "41.8358",
+              "longitude": "23.4875"
+            },
+            "sameAs": []
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://banskounlocked.com/#website",
+            "name": "Bansko Unlocked",
+            "url": "https://banskounlocked.com",
+            "description": "Adventure activities in Bansko, Bulgaria — ATV & buggy tours, shooting range, camping and snow riding.",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://banskounlocked.com/#organization" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://banskounlocked.com/activities?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "TravelAgency",
+            "@id": "https://banskounlocked.com/#travel-agency",
+            "name": "Bansko Unlocked",
+            "url": "https://banskounlocked.com",
+            "image": "https://banskounlocked.com/assets/og/og-image.jpg",
+            "description": "Adventure activities in Bansko, Bulgaria — ATV & buggy tours, a shooting range, mountain camping and winter snow riding in the Pirin Mountains.",
+            "telephone": ["+44-7472362817", "+359-894494126"],
+            "email": "info@banskounlocked.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Pirin Mountains Region",
+              "addressLocality": "Bansko",
+              "addressRegion": "Blagoevgrad Province",
+              "postalCode": "2770",
+              "addressCountry": "BG"
+            },
+            "serviceType": "Adventure Tourism",
+            "priceRange": "€€",
+            "currenciesAccepted": "EUR, GBP",
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Bansko Activities",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "ATV & Buggy Tours Bansko",
+                    "description": "Guided off-road ATV and buggy tours through the Pirin Mountains around Bansko."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Shooting Range Bansko",
+                    "description": "Supervised shooting range experience in Bansko for all experience levels."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Mountain Camping Bansko",
+                    "description": "Guided mountain camping experiences in the Pirin Mountains."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Snow Riding Bansko",
+                    "description": "Winter snow riding adventures in the mountains around Bansko."
+                  }
+                }
+              ]
+            },
+            "sameAs": [],
+            "areaServed": [
+              { "@type": "City", "name": "Bansko", "addressCountry": "BG" },
+              { "@type": "City", "name": "Razlog", "addressCountry": "BG" },
+              { "@type": "Place", "name": "Pirin Mountains", "description": "UNESCO World Heritage Site" },
+              { "@type": "Country", "name": "Bulgaria" }
+            ]
+          }
+        ]
+      }
+    </script>
+
+    <!-- Fonts loaded non-render-blocking: preload the stylesheet without
+         blocking first paint, then promote to a real stylesheet once the
+         CSS is parsed (`onload` swap). Noscript fallback covers clients
+         without JS. `display=swap` on both URLs means the browser paints
+         with the system fallback immediately and swaps in Roboto / icons
+         when they arrive — no FOIT delay on the LCP poster. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+      />
+    </noscript>
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
+      />
+    </noscript>
+
+    <!-- LCP: hero video poster (slide 0). The <video poster> paints this webp
+         instantly while the ~1.8MB MP4 streams in behind it; a poster attribute
+         can't carry fetchpriority, so preloading the same file here is what gives
+         the LCP resource high priority. If the hero's first slide ever changes,
+         update this href to match (see home.component.ts → slides[0]). -->
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/home-videos-compressed/enduro-hero-fallback.webp"
+      fetchpriority="high"
+    />
+
+  </head>
+  <body>
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=780880514467909&ev=PageView&noscript=1"
+      />
+    </noscript>
+    <!-- Facebook JS SDK removed 2026-05-23: site has no fb-* embeds (no
+         like/share/page widgets), so xfbml had nothing to parse. The Meta
+         Pixel above is separate (fbevents.js) and is still loaded on idle. -->
+    <app-root></app-root>
+  </body>
+</html>

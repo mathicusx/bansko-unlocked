@@ -1,0 +1,66 @@
+    # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+/server/node_modules
+/server/dist
+/server/.env
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+Claude.md
+pages-to-index.txt
+
+# Instagram feed thumbnails — generated at build by scripts/generate-instagram.mjs
+# (the committed fallback in src/app/data/instagram-feed.ts uses gallery images,
+# so these never need to be in git; Netlify regenerates them every deploy).
+/src/assets/instagram/
+
+# Marketing secrets — the GA4 service-account key must never be committed.
+ga4-service-account.json
+*-service-account.json
+.marketing-data
+
+# Pulled marketing reports — kept local only (GSC/GA4 exports, campaign CSVs).
+# Re-pull with `npm run pull:marketing` rather than committing them.
+/marketing-data/
+
+# Local SEO working notes (e.g. seo/backlog.md). The disavow file is the one
+# exception — it's the committed source of truth uploaded to GSC + Bing.
+/seo/
+!/seo/disavow.txt

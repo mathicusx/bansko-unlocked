@@ -1,0 +1,366 @@
+@import "../../shared/styles/mixins";
+
+// Host element guard — Angular renders <app-reviews> as a custom element with
+// `display: inline` by default, which can ignore size constraints. Force it
+// to be a block that strictly respects its parent's width.
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.reviews-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: var(--brand-primary);
+    border-radius: 2px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  h2 {
+    font-size: 2.8rem;
+    @include brand-primary;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    font-weight: 700;
+
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
+  }
+
+  p {
+    font-size: 1.3rem;
+    font-weight: 400;
+    @include text-secondary;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 4px var(--shadow);
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+
+    @media (max-width: 768px) {
+      font-size: 1.15rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Carousel layout
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0 0 2.5rem;
+  box-sizing: border-box;
+  // Clip horizontally only — the track slides on X. Allowing Y to be visible
+  // lets card height grow with the longest review instead of being clipped.
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.nav-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--brand-primary);
+  background: transparent;
+  color: var(--brand-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--brand-primary);
+    color: #fff;
+  }
+
+  mat-icon {
+    font-size: 1.4rem;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  &.hide-mobile {
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+}
+
+.carousel-clip {
+  flex: 1;
+  min-width: 0;   // CRITICAL — without this, the flex item grows to fit
+                  // its 14-card content width instead of shrinking to the
+                  // wrapper's available width, causing horizontal overflow
+                  // and pushing the first card partially off-screen left.
+  // Same rationale as .carousel-wrapper: only clip X so the longest review
+  // can dictate the carousel's natural height instead of getting truncated.
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+// Swipe hint shown only on mobile
+.swipe-hint {
+  display: none;
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.5;
+  margin-top: -1.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+
+  @media (max-width: 480px) {
+    display: block;
+  }
+}
+
+.carousel-track {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5rem;
+  transition: transform 0.4s ease;
+  padding: 0.5rem 0 1rem;
+  // The track is intentionally wider than the clip (14 cards × 33.333%). The
+  // clip's `overflow: hidden` is what limits visible content. We do NOT clip
+  // here, but we DO want `will-change` so transform animations stay smooth
+  // and so the track doesn't trigger reflow on the host element.
+  will-change: transform;
+}
+
+.review-card {
+  // Desktop: 3 cards visible
+  flex: 0 0 calc(33.333% - 1rem);
+  scroll-snap-align: start;
+  background: var(--card-bg, rgba(255,255,255,0.05));
+  border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  // Tablet: 2 cards visible
+  @media (max-width: 900px) {
+    flex: 0 0 calc(50% - 0.75rem);
+  }
+
+  // Mobile: 1 card visible
+  @media (max-width: 560px) {
+    flex: 0 0 100%;
+  }
+}
+
+.review-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.reviewer-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--brand-primary, #e65c00);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    color: #fff;
+    font-size: 1.4rem;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+.reviewer-info {
+  flex: 1;
+  min-width: 0;
+
+  h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .review-date {
+    font-size: 0.78rem;
+    opacity: 0.6;
+  }
+}
+
+// Brand-orange "verified" chip — replaces the previous Facebook-blue
+// "Recommends" badge so cards read as on-site reviews rather than FB UI
+// embeds, while staying visually tied to the brand button below the carousel.
+.verified-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--brand-accent);
+  border: 1px solid var(--brand-accent-strong);
+  color: var(--accent-readable, #0a7a7a);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 0.9rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    color: var(--accent-readable, #0a7a7a);
+  }
+}
+
+.star-rating {
+  display: flex;
+  gap: 2px;
+
+  mat-icon {
+    color: #f59e0b;
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+}
+
+.review-text {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  opacity: 0.85;
+  margin: 0;
+
+  // Long reviews (Kyle / Michiel / Sjef etc.) are clamped to 6 lines in the
+  // carousel so short reviews on the same row don't sit in a sea of whitespace.
+  // Clicking the read-toggle below removes this class and reveals the full text.
+  &.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.read-toggle {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: -0.25rem;
+  color: var(--brand-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+// Footer link
+.more-reviews {
+  text-align: center;
+  padding: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  p {
+    opacity: 0.7;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  // Override Material's azure-blue theme primary for this button so it
+  // matches the site's brand orange. Uses the MDC raised-button CSS
+  // custom properties exposed by Angular Material 18.
+  .review-cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .google-link,
+  .facebook-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+
+    &.mat-mdc-raised-button {
+      --mdc-protected-button-container-color: var(--brand-primary, #e65c00);
+      --mdc-protected-button-label-text-color: #fff;
+      color: #fff;
+
+      mat-icon {
+        color: #fff;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateX(-50%) scaleX(1.2);
+  }
+}

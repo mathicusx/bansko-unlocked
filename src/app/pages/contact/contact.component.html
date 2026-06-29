@@ -1,0 +1,120 @@
+<div class="contact-container">
+  <div class="contact-header">
+    <h1>{{ copy.h1 }}</h1>
+    <p class="subtitle">{{ copy.subtitle }}</p>
+  </div>
+
+  <div class="contact-content">
+    <div class="contact-form-section">
+      <mat-card class="contact-card">
+        <mat-card-content>
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+            <!-- Name Field -->
+            <mat-form-field appearance="outline" floatLabel="always" class="form-field">
+              <mat-label>{{ copy.form.nameLabel }}</mat-label>
+              <input matInput formControlName="name" [placeholder]="copy.form.namePlaceholder">
+              <mat-error *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.errors">
+                {{getErrorMessage('name')}}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Email Field -->
+            <mat-form-field appearance="outline" floatLabel="always" class="form-field">
+              <mat-label>{{ copy.form.emailLabel }}</mat-label>
+              <input matInput type="email" formControlName="email" [placeholder]="copy.form.emailPlaceholder">
+              <mat-error *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.errors">
+                {{getErrorMessage('email')}}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Message Field -->
+            <mat-form-field appearance="outline" floatLabel="always" class="form-field message-field">
+              <mat-label>{{ copy.form.messageLabel }}</mat-label>
+              <textarea matInput
+                        formControlName="message"
+                        [placeholder]="copy.form.messagePlaceholder"
+                        rows="6">
+              </textarea>
+              <mat-error *ngIf="contactForm.get('message')?.touched && contactForm.get('message')?.errors">
+                {{getErrorMessage('message')}}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Submit Button -->
+            <button mat-raised-button
+                    type="submit"
+                    class="send-button"
+                    [disabled]="isSubmitting">
+              <span *ngIf="!isSubmitting">{{ copy.form.send }}</span>
+              <span *ngIf="isSubmitting">{{ copy.form.sending }}</span>
+            </button>
+          </form>
+
+          <!-- reCAPTCHA Notice -->
+          <div class="recaptcha-notice">
+            <p [innerHTML]="copy.form.recaptchaNotice"></p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="contact-info-section">
+      <div class="contact-info">
+        <h3>{{ copy.directContact.heading }}</h3>
+        <p>{{ copy.directContact.intro1 }}</p>
+        <p>{{ copy.directContact.intro2 }}</p>
+
+        <div class="contact-methods">
+          <!-- WhatsApp Button -->
+          <button mat-raised-button
+                  class="whatsapp-button"
+                  (click)="openWhatsApp()">
+            <mat-icon>chat</mat-icon>
+            {{ copy.directContact.whatsappButton }}
+          </button>
+
+          <!-- Direct Contact Info -->
+          <div class="direct-contact">
+            <p>{{ copy.directContact.hurryText }}</p>
+            <div class="contact-details">
+              <p><strong>{{ copy.directContact.phoneLabel }}</strong> <a id="contact-call-link">{{ copy.directContact.clickToCall }}</a></p>
+              <p><strong>{{ copy.directContact.emailLabel }}</strong> <a href="mailto:info@banskounlocked.com" (click)="trackEmailClick()">info&#64;banskounlocked.com</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-block" itemscope itemtype="https://schema.org/PostalAddress">
+          <h3>{{ copy.location.heading }}</h3>
+          <address class="location-address">
+            <strong itemprop="name">Bansko Unlocked</strong><br>
+            <span itemprop="streetAddress">{{ copy.location.region }}</span><br>
+            <span itemprop="addressLocality">Bansko</span>,
+            <span itemprop="postalCode">2770</span><br>
+            <span itemprop="addressRegion">{{ copy.location.province }}</span>,
+            <span itemprop="addressCountry">{{ copy.location.country }}</span>
+          </address>
+          <div class="map-embed">
+            <iframe
+              src="https://maps.google.com/maps?q=Bansko%2C%20Pirin%20Mountains%2C%20Bulgaria&z=11&output=embed"
+              width="100%"
+              height="320"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              [title]="copy.location.mapTitle"
+              [attr.aria-label]="copy.location.mapTitle">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-feedback-dialog
+  *ngIf="feedbackVisible"
+  [type]="feedbackType"
+  [title]="feedbackTitle"
+  [message]="feedbackMessage"
+  [closeLabel]="copy.form.snackbarClose"
+  (closed)="closeFeedback()">
+</app-feedback-dialog>

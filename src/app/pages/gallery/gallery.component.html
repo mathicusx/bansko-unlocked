@@ -1,0 +1,56 @@
+<div class="gallery-container">
+  <!-- Gallery Grid -->
+  <div class="gallery-grid">
+    <div
+      *ngFor="let image of displayImages; let i = index"
+      class="gallery-item"
+      [class.large]="i % 7 === 0 || i % 11 === 0"
+      [class.wide]="i % 5 === 0 && i % 7 !== 0"
+      [class.tall]="i % 3 === 0 && i % 5 !== 0 && i % 7 !== 0"
+      [class.medium]="i % 2 === 0 && i % 3 !== 0 && i % 5 !== 0 && i % 7 !== 0"
+      [class.small]="i % 2 !== 0 && i % 3 !== 0 && i % 5 !== 0 && i % 7 !== 0"
+      (click)="openModal(i)"
+    >
+      <img [src]="image.thumb" [alt]="image.alt" loading="lazy" decoding="async" />
+    </div>
+  </div>
+
+  <!-- Modal/Lightbox -->
+  <div class="modal-overlay" [class.open]="isModalOpen" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <!-- Close Button -->
+      <button class="close-btn" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+
+      <!-- Navigation Buttons -->
+      <button class="nav-btn prev-btn" (click)="previousImage()" type="button">
+        <span>&#8249;</span>
+      </button>
+
+      <button class="nav-btn next-btn" (click)="nextImage()" type="button">
+        <span>&#8250;</span>
+      </button>
+
+      <!-- Main Image -->
+      <div
+        class="image-container"
+        (touchstart)="onTouchStart($event)"
+        (touchend)="onTouchEnd($event)"
+      >
+        <img
+          [src]="displayImages[currentImageIndex].full"
+          [alt]="displayImages[currentImageIndex].alt"
+          class="modal-image"
+          [class.swipe-next]="swipeDirection === 'next'"
+          [class.swipe-prev]="swipeDirection === 'prev'"
+        />
+      </div>
+
+      <!-- Image Counter -->
+      <div class="image-counter">
+        {{ currentImageIndex + 1 }} / {{ displayImages.length }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,98 @@
+<div class="difficulty-container">
+  <header class="difficulty-hero">
+    <h1>{{ copy.h1 }}</h1>
+    <p class="intro-text" [innerHTML]="copy.intro"></p>
+  </header>
+
+  <div class="difficulty-content">
+    <section class="how-we-calibrate">
+      <h2>{{ copy.calibrate.heading }}</h2>
+      <p
+        *ngFor="let paragraph of copy.calibrate.paragraphs"
+        [innerHTML]="paragraph"
+      ></p>
+      <p class="no-licence-link">
+        <a [routerLink]="links.noLicence">{{ noLicenceLabel }}</a>
+      </p>
+    </section>
+
+    <section
+      class="level-section"
+      *ngFor="let level of levels; trackBy: trackByLevelKey"
+      [attr.data-level]="level.key"
+      [id]="'level-' + level.key"
+    >
+      <div class="level-header">
+        <span class="level-badge" [style.background-color]="level.badgeColor">{{ level.badge }}</span>
+        <h2>{{ level.title }}</h2>
+        <p class="one-liner">{{ level.oneLiner }}</p>
+      </div>
+
+      <div class="level-body">
+        <div class="level-image">
+          <img
+            [src]="level.image"
+            [alt]="level.imageAlt"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+
+        <div class="level-text">
+          <p>{{ level.description }}</p>
+
+          <div class="level-detail-grid">
+            <div class="level-detail">
+              <h3>{{ level.terrainHeading }}</h3>
+              <ul>
+                <li *ngFor="let item of level.terrain">{{ item }}</li>
+              </ul>
+            </div>
+            <div class="level-detail">
+              <h3>{{ level.riderHeading }}</h3>
+              <ul>
+                <li *ngFor="let item of level.rider">{{ item }}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="recommended-tours">
+            <h3>{{ level.recommendedHeading }}</h3>
+            <ul class="tour-link-list">
+              <li *ngFor="let tour of level.recommendedTours">
+                <a [routerLink]="tourLink(tour.slug)">
+                  {{ tour.title }}
+                  <span class="tour-duration">{{ tour.duration }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bulgaria-vs-rest">
+      <h2>{{ copy.bulgariaVsRest.heading }}</h2>
+      <p *ngFor="let paragraph of copy.bulgariaVsRest.paragraphs">{{ paragraph }}</p>
+    </section>
+
+    <section class="faq-section">
+      <h2>{{ copy.faqHeading }}</h2>
+      <div class="faq-list">
+        <details *ngFor="let faq of copy.faqs">
+          <summary>{{ faq.question }}</summary>
+          <p>{{ faq.answer }}</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2>{{ copy.cta.heading }}</h2>
+      <p>{{ copy.cta.body }}</p>
+      <div class="cta-buttons">
+        <a class="cta-primary" [routerLink]="links.enduroTours">{{ copy.cta.primary }}</a>
+        <a class="cta-secondary" [routerLink]="links.contact">{{ copy.cta.secondary }}</a>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,672 @@
+<div class="loading-container" *ngIf="loading">
+  <div class="spinner"></div>
+  <span class="loading-text">{{ copy.loading }}</span>
+</div>
+
+<div class="tour-detail-container" *ngIf="tour && !loading">
+  <div class="tour-hero">
+    <!-- View Mode -->
+    <img
+      *ngIf="!editing"
+      [src]="tour.image | optimize:1600"
+      [srcset]="tour.image | srcset:[600, 1000, 1600, 2000]"
+      sizes="100vw"
+      [alt]="tour.title"
+      class="hero-image"
+      fetchpriority="high"
+      decoding="async" />
+    <!-- Edit Mode -->
+    <ng-container *ngIf="editing">
+      <img [src]="editData.image | optimize:1600" [alt]="editData.title" class="hero-image" />
+      <div class="image-upload-overlay">
+        <label class="upload-btn">
+          <mat-icon>photo_camera</mat-icon>
+          {{ uploadingImage === 'main' ? 'Uploading...' : 'Change Image' }}
+          <input type="file" accept="image/*" (change)="onMainImageUpload($event)" hidden />
+        </label>
+      </div>
+    </ng-container>
+    <div class="hero-overlay">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="hero-content">
+        <div class="draft-banner" *ngIf="isAdmin && tour.published === false">
+          <mat-icon>visibility_off</mat-icon>
+          DRAFT — hidden from the public site. Toggle &ldquo;Published&rdquo; below when ready.
+        </div>
+        <h1 *ngIf="!editing">{{ tour.title }}</h1>
+        <input *ngIf="editing" [(ngModel)]="editData.title" class="inline-edit-input inline-edit-title" placeholder="e.g. WEEKEND WHEELS ADVENTURE" />
+        <span *ngIf="editing" class="edit-hint">Tour title (displayed as heading)</span>
+        <p class="hero-description" *ngIf="!editing">{{ tour.description }}</p>
+        <textarea *ngIf="editing" [(ngModel)]="editData.description" class="inline-edit-input inline-edit-textarea" placeholder="e.g. Kick up some dirt and fuel your weekend..." rows="3"></textarea>
+        <span *ngIf="editing" class="edit-hint">Tour description shown on the card and hero</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tour-content">
+    <div class="tour-info-top-grid">
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>{{ copy.detailsHeading }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="detail-item" *ngIf="tour.promo || editing">
+            <mat-icon>local_offer</mat-icon>
+            <div>
+              <strong>{{ copy.earlyBird }}</strong>
+              <span *ngIf="!editing">{{ tour.promo }}</span>
+              <textarea *ngIf="editing" [(ngModel)]="editData.promo" class="inline-edit-input inline-edit-textarea" placeholder="e.g. Book now and save 10%!" rows="2"></textarea>
+              <span *ngIf="editing" class="edit-hint">Optional promo badge text</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <mat-icon>schedule</mat-icon>
+            <div>
+              <strong>{{ copy.durationLabel }}</strong>
+              <span *ngIf="!editing">{{ tour.durationDetails }}</span>
+              <ng-container *ngIf="editing">
+                <textarea [(ngModel)]="editData.duration" class="inline-edit-input inline-edit-textarea" placeholder="e.g. 4 Days" rows="1"></textarea>
+                <span class="edit-hint">Short duration label shown on tour card</span>
+                <textarea [(ngModel)]="editData.durationDetails" class="inline-edit-input inline-edit-textarea" placeholder="e.g. 4 days (3 nights) from which 2 days are for riding" rows="2"></textarea>
+                <span class="edit-hint">Detailed duration breakdown</span>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <mat-icon>route</mat-icon>
+            <div>
+              <strong>{{ copy.averageDistanceLabel }}</strong>
+              <span *ngIf="!editing">{{ tour.averageDistance }}</span>
+              <textarea *ngIf="editing" [(ngModel)]="editData.averageDistance" class="inline-edit-input inline-edit-textarea" placeholder="e.g. 60-120km per day - between 6 and 8 hours" rows="2"></textarea>
+              <span *ngIf="editing" class="edit-hint">Daily riding distance and hours</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <mat-icon>trending_up</mat-icon>
+            <div>
+              <strong>{{ copy.difficultyLabel }}</strong>
+              <div class="difficulty-badges" *ngIf="!editing">
+                <a
+                  *ngFor="let level of tour.difficulty"
+                  class="difficulty-badge"
+                  [style.background-color]="getDifficultyColor(level)"
+                  [routerLink]="difficultyLevelsLink"
+                  [fragment]="difficultyFragment(level)"
+                  [attr.aria-label]="translateDifficulty(level) + ' — ' + copy.difficultyLabel"
+                >
+                  {{ translateDifficulty(level) }}
+                </a>
+              </div>
+              <textarea *ngIf="editing" [(ngModel)]="editData.difficulty" class="inline-edit-input inline-edit-textarea" placeholder="Beginner, Advanced, Pro" rows="1"></textarea>
+              <span *ngIf="editing" class="edit-hint">Comma-separated: Beginner, Advanced, Pro</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="included-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>checklist</mat-icon>
+            {{ copy.whatsIncluded }}
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="included-list">
+            @for (item of copy.includedItems; track item.text) {
+              <div class="included-item">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.text }}</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <mat-card class="itinerary-card">
+      <mat-card-header>
+        <mat-card-title>{{ copy.itineraryHeading }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="itinerary-timeline">
+          <!-- View Mode -->
+          <ng-container *ngIf="!editing">
+            <div
+              *ngFor="let day of tour.tourDetails; let last = last"
+              class="timeline-item"
+              [class.last-item]="last"
+            >
+              <div class="timeline-marker">
+                <span class="day-number">{{ day.day }}</span>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-image">
+                  <img
+                    [src]="day.image | optimize:800"
+                    [srcset]="day.image | srcset:[400, 800, 1200]"
+                    sizes="(max-width: 768px) 90vw, 600px"
+                    [alt]="day.title"
+                    loading="lazy"
+                    decoding="async" />
+                </div>
+                <div class="timeline-text">
+                  <h3 class="day-title">{{ copy.dayLabel }} {{ day.day }} - {{ day.title }}</h3>
+                  <p class="day-description">{{ day.description }}</p>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Edit Mode -->
+          <ng-container *ngIf="editing">
+            <div
+              *ngFor="let day of editData.tourDetails; let i = index; let last = last; trackBy: trackByDay"
+              class="timeline-item"
+              [class.last-item]="last"
+            >
+              <div class="timeline-marker">
+                <span class="day-number">{{ day.day }}</span>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-image edit-image-container">
+                  <img
+                    [src]="day.image | optimize:800"
+                    [srcset]="day.image | srcset:[400, 800, 1200]"
+                    sizes="(max-width: 768px) 90vw, 600px"
+                    [alt]="day.title"
+                    loading="lazy"
+                    decoding="async" />
+                  <label class="upload-btn day-upload-btn">
+                    <mat-icon>photo_camera</mat-icon>
+                    {{ uploadingImage === 'day-' + i ? 'Uploading...' : 'Change' }}
+                    <input type="file" accept="image/*" (change)="onDayImageUpload($event, i)" hidden />
+                  </label>
+                </div>
+                <div class="timeline-text edit-day-fields">
+                  <input [name]="'dayTitle' + i" [(ngModel)]="editData.tourDetails[i].title" class="inline-edit-input" placeholder="e.g. Riding Day, Arrival Day, Departure Day" />
+                  <span class="edit-hint">Day title (e.g. Arrival Day, Riding Day, Relaxing Day)</span>
+                  <textarea [name]="'dayDesc' + i" [(ngModel)]="editData.tourDetails[i].description" class="inline-edit-input inline-edit-textarea" placeholder="Describe what happens on this day..." rows="3"></textarea>
+                  <span class="edit-hint">Detailed description of the day's activities</span>
+                  <button mat-icon-button color="warn" (click)="removeDay(i)" class="remove-day-btn">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button mat-raised-button color="accent" (click)="addDay()" class="add-day-btn">
+              <mat-icon>add</mat-icon> Add Day
+            </button>
+          </ng-container>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="pricing-card pricing-full-width">
+      <mat-card-header>
+        <mat-card-title>{{ copy.pricingHeading }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="pricing-container">
+          <div class="pricing-left">
+            <!-- Promo offer — show the booking-period label when the promo has
+                 one, otherwise the live countdown. Mirrors the tour-card logic
+                 so a promo reads the same on the listing and the detail page. -->
+            <div class="promo-countdown-section" *ngIf="hasActivePromo() && !editing">
+              <div class="promo-info" *ngIf="tour.promoBookingPeriod; else promoCountdown">
+                <mat-icon>local_offer</mat-icon>
+                <span>{{ copy.specialOffer }}</span>
+                <span class="promo-separator">•</span>
+                <mat-icon>schedule</mat-icon>
+                <span>{{ copy.validForPeriod(tour.promoBookingPeriod) }}</span>
+              </div>
+              <ng-template #promoCountdown>
+                <app-countdown-timer [endDate]="tour.promoEndDate!"></app-countdown-timer>
+              </ng-template>
+            </div>
+
+            <!-- Edit Mode Pricing -->
+            <div class="edit-pricing-fields" *ngIf="editing">
+              <div class="edit-price-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Price EUR</mat-label>
+                  <input matInput type="number" [(ngModel)]="editData.priceEur" />
+                  <span matPrefix>€&nbsp;</span>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Price GBP</mat-label>
+                  <input matInput type="number" [(ngModel)]="editData.priceGbp" />
+                  <span matPrefix>£&nbsp;</span>
+                </mat-form-field>
+              </div>
+              <div class="edit-price-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Promo Price EUR</mat-label>
+                  <input matInput type="number" [(ngModel)]="editData.promoPriceEur" />
+                  <span matPrefix>€&nbsp;</span>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Promo Price GBP</mat-label>
+                  <input matInput type="number" [(ngModel)]="editData.promoPriceGbp" />
+                  <span matPrefix>£&nbsp;</span>
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Promo End Date</mat-label>
+                <input matInput type="datetime-local" [(ngModel)]="editData.promoEndDate" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Promo Booking Period (label)</mat-label>
+                <input matInput [(ngModel)]="editData.promoBookingPeriod" placeholder="e.g. July or July–August" />
+              </mat-form-field>
+            </div>
+
+            <!-- View Mode Pricing -->
+            <!-- Clickable: heatmap showed riders tapping the price expecting to
+                 book. The whole block now opens the checkout dialog. -->
+            <div
+              class="price-options price-options--clickable"
+              *ngIf="!editing"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="copy.checkout.reserveButton"
+              (click)="openCheckout()"
+              (keydown.enter)="openCheckout()"
+              (keydown.space)="openCheckout()">
+              <div class="price-option">
+                <div class="currency">EUR</div>
+                <div class="price-wrapper" *ngIf="hasActivePromo() && tour.promoPriceEur">
+                  <div class="old-price">€{{ tour.priceEur }}</div>
+                  <div class="price promo-price">€{{ tour.promoPriceEur }}</div>
+                </div>
+                <div class="price-wrapper" *ngIf="!hasActivePromo() || !tour.promoPriceEur">
+                  <div class="price">€{{ tour.priceEur }}</div>
+                </div>
+                <div class="per-person">{{ copy.perPerson }}</div>
+              </div>
+              <ng-container *ngIf="showGbp">
+                <div class="price-divider">{{ copy.priceDivider }}</div>
+                <div class="price-option">
+                  <div class="currency">GBP</div>
+                  <div class="price-wrapper" *ngIf="hasActivePromo() && tour.promoPriceGbp">
+                    <div class="old-price">£{{ tour.priceGbp }}</div>
+                    <div class="price promo-price">£{{ tour.promoPriceGbp }}</div>
+                  </div>
+                  <div class="price-wrapper" *ngIf="!hasActivePromo() || !tour.promoPriceGbp">
+                    <div class="price">£{{ tour.priceGbp }}</div>
+                  </div>
+                  <div class="per-person">{{ copy.perPerson }}</div>
+                </div>
+              </ng-container>
+              <div class="price-tap-hint">
+                <mat-icon>touch_app</mat-icon>
+                <span>{{ copy.checkout.reserveButton }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pricing-right" *ngIf="!editing">
+            <div class="payment-section">
+              <div class="deposit-info">
+                <h3>{{ copy.depositNotice }}</h3>
+              </div>
+
+              <!-- Truthful social-proof / season-filling lines. Each is
+                   rendered only when the backend quota is met (the getter
+                   returns null otherwise) — no weak "1 booked" messaging. -->
+              <div class="social-proof" *ngIf="socialProofText || seasonFillingText">
+                <p *ngIf="socialProofText" class="social-proof__line social-proof__line--count">
+                  <mat-icon>groups</mat-icon>
+                  <span>{{ socialProofText }}</span>
+                </p>
+                <p *ngIf="seasonFillingText" class="social-proof__line social-proof__line--season">
+                  <mat-icon>local_fire_department</mat-icon>
+                  <span>{{ seasonFillingText }}</span>
+                </p>
+              </div>
+
+              <button type="button" class="reserve-button" (click)="openCheckout()">
+                <mat-icon>event_available</mat-icon>
+                {{ copy.checkout.reserveButton }}
+              </button>
+
+              <a class="whatsapp-button" (click)="openWhatsApp()" href="javascript:void(0)" role="button">
+                <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.119.554 4.107 1.523 5.832L.057 23.143a.75.75 0 0 0 .916.882l5.453-1.43A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.699 9.699 0 0 1-4.964-1.363.75.75 0 0 0-.578-.079l-3.827 1.004 1.028-3.74a.75.75 0 0 0-.083-.594A9.698 9.698 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+                </svg>
+                {{ copy.checkout.whatsappCta }}
+              </a>
+<!-- 
+              <div class="deposit-note">
+                <mat-icon>info</mat-icon>
+                <span>
+                  {{ copy.bookingEmailIntro }}
+                  <a
+                    (click)="sendBookingEmail()"
+                    style="color: #38bb0e; text-decoration: underline; cursor: pointer"
+                    >info&#64;banskounlocked.com</a
+                  >
+                  {{ copy.bookingEmailOutro }}
+                </span>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="requirements-card">
+      <mat-card-header>
+        <mat-card-title>{{ copy.requirementsHeading }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="requirements-grid">
+          @for (req of copy.requirements; track req.title) {
+            <div class="requirement-section">
+              <h3>
+                <mat-icon>{{ req.icon }}</mat-icon>
+                {{ req.title }}
+              </h3>
+              <p>{{ req.body }}</p>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- What riders said — per-tour reviews (rendered only when this tour
+         has attributable reviews in src/app/data/reviews.data.ts). Visible
+         display required by Google's policy when the same reviews appear in
+         JSON-LD aggregateRating; mismatch causes Google to strip the rich
+         result. Keep this list in sync with the schema emitted in
+         tour-detail.component.ts. -->
+    <mat-card class="tour-reviews-card" *ngIf="tourReviews.length > 0">
+      <mat-card-content>
+        <h2 class="tour-reviews-heading">{{ copy.reviewsHeading }}</h2>
+        <div class="tour-reviews-list">
+          <article class="tour-review" *ngFor="let review of tourReviews">
+            <header class="tour-review-header">
+              <div class="tour-review-stars" [attr.aria-label]="copy.starsAria">
+                <mat-icon *ngFor="let _ of [1,2,3,4,5]">star</mat-icon>
+              </div>
+              <div class="tour-review-meta">
+                <span class="tour-review-author">{{ review.name }}</span>
+                <span class="tour-review-date">{{ review.date }} · {{ review.location }}</span>
+              </div>
+            </header>
+            <p class="tour-review-body">{{ review.text }}</p>
+          </article>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Admin Toolbar -->
+  <div class="admin-toolbar" *ngIf="isAdmin">
+    <ng-container *ngIf="!editing">
+      <button mat-raised-button color="accent" (click)="startEditing()">
+        <mat-icon>edit</mat-icon> Edit Tour
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteTour()">
+        <mat-icon>delete</mat-icon> Delete Tour
+      </button>
+    </ng-container>
+    <ng-container *ngIf="editing">
+      <label class="publish-toggle">
+        <input type="checkbox" [(ngModel)]="editData.published" />
+        Published (public)
+      </label>
+      <button mat-raised-button color="primary" (click)="saveEditing()" [disabled]="saving">
+        <mat-icon>save</mat-icon> {{ saving ? 'Saving...' : 'Save Changes' }}
+      </button>
+      <button mat-raised-button (click)="cancelEditing()" [disabled]="saving">
+        <mat-icon>close</mat-icon> Cancel
+      </button>
+    </ng-container>
+  </div>
+
+  <!-- ===================== Pre-booking checkout dialog ===================== -->
+  <div
+    class="checkout-overlay"
+    *ngIf="showCheckout"
+    (click)="closeCheckout()">
+    <div
+      class="checkout-dialog"
+      role="dialog"
+      aria-modal="true"
+      (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="checkout-close"
+        [attr.aria-label]="copy.checkout.closeAria"
+        (click)="closeCheckout()">
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <!-- Step 1 — rider details -->
+      <ng-container *ngIf="checkoutStep === 1">
+        <h2 class="checkout-title">{{ copy.checkout.title }}</h2>
+        <p class="checkout-subtitle">{{ copy.checkout.subtitle }}</p>
+
+        <div class="social-proof social-proof--dialog" *ngIf="socialProofText || seasonFillingText">
+          <p *ngIf="socialProofText" class="social-proof__line social-proof__line--count">
+            <mat-icon>groups</mat-icon>
+            <span>{{ socialProofText }}</span>
+          </p>
+          <p *ngIf="seasonFillingText" class="social-proof__line social-proof__line--season">
+            <mat-icon>local_fire_department</mat-icon>
+            <span>{{ seasonFillingText }}</span>
+          </p>
+        </div>
+
+        <form class="checkout-form" (ngSubmit)="goToPayment()">
+          <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+            <mat-label>{{ copy.checkout.nameLabel }}</mat-label>
+            <input matInput name="name" [(ngModel)]="checkout.name" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+            <mat-label>{{ copy.checkout.emailLabel }}</mat-label>
+            <input matInput type="email" name="email" [(ngModel)]="checkout.email" placeholder="your.email@example.com" required />
+            <mat-hint *ngIf="checkout.email && !checkout.email.includes('@')">
+              {{ copy.checkout.emailInvalid }}
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+            <mat-label>{{ copy.checkout.phoneLabel }}</mat-label>
+            <input
+              matInput
+              type="tel"
+              name="phone"
+              [(ngModel)]="checkout.phone"
+              [placeholder]="copy.checkout.phonePlaceholder"
+              required />
+          </mat-form-field>
+
+          <div class="checkout-field">
+            <span class="checkout-label">{{ copy.checkout.preferredContactLabel }}</span>
+            <mat-radio-group
+              class="checkout-contact-options"
+              name="preferredContact"
+              [(ngModel)]="checkout.preferredContact">
+              <mat-radio-button color="primary" value="whatsapp">{{ copy.checkout.contactOptions.whatsapp }}</mat-radio-button>
+              <mat-radio-button color="primary" value="phone">{{ copy.checkout.contactOptions.phone }}</mat-radio-button>
+              <mat-radio-button color="primary" value="email">{{ copy.checkout.contactOptions.email }}</mat-radio-button>
+              <mat-radio-button color="primary" value="other">{{ copy.checkout.contactOptions.other }}</mat-radio-button>
+            </mat-radio-group>
+            <mat-form-field
+              *ngIf="checkout.preferredContact === 'other'"
+              appearance="outline"
+              floatLabel="always"
+              class="full-width">
+              <input
+                matInput
+                name="contactOther"
+                [(ngModel)]="checkout.contactOther"
+                [placeholder]="copy.checkout.contactOtherPlaceholder"
+                required />
+            </mat-form-field>
+          </div>
+
+          <div class="checkout-field">
+            <span class="checkout-label">{{ copy.checkout.experienceLabel }}</span>
+            <span class="checkout-hint">{{ copy.checkout.experiencePlaceholder }}</span>
+            <div class="checkout-experience-options">
+              <mat-checkbox
+                *ngFor="let level of experienceChoices"
+                color="primary"
+                class="extras-checkbox"
+                [checked]="isExperienceSelected(level)"
+                (change)="toggleExperience(level, $event.checked)">
+                {{ copy.checkout.experienceOptions[level] }}
+              </mat-checkbox>
+            </div>
+          </div>
+
+          <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="checkout-riders-field">
+            <mat-label>{{ copy.checkout.ridersLabel }}</mat-label>
+            <input
+              matInput
+              type="number"
+              name="riders"
+              [min]="minRiders"
+              max="20"
+              [(ngModel)]="checkout.riders" />
+            <mat-hint>{{ copy.checkout.ridersHint(minRiders) }}</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+            <mat-label>{{ copy.checkout.datesLabel }}</mat-label>
+            <mat-date-range-input [rangePicker]="picker" [min]="today" (click)="picker.open()">
+              <input
+                matStartDate
+                name="startDate"
+                [placeholder]="copy.checkout.dateStart"
+                [(ngModel)]="checkout.startDate"
+                readonly />
+              <input
+                matEndDate
+                name="endDate"
+                [placeholder]="copy.checkout.dateEnd"
+                [(ngModel)]="checkout.endDate"
+                readonly />
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+
+          <div class="checkout-extras">
+            <span class="checkout-label">{{ copy.checkout.extrasLabel }}</span>
+            <mat-checkbox
+              name="newTires"
+              [(ngModel)]="bookingExtras.newTires"
+              color="primary"
+              class="extras-checkbox">
+              {{ copy.newTires }} <span class="extras-price">{{ copy.newTiresPrice }}</span>
+            </mat-checkbox>
+          </div>
+
+          <button
+            type="submit"
+            class="checkout-primary"
+            [disabled]="!checkoutValid">
+            {{ copy.checkout.continueButton }}
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </form>
+      </ng-container>
+
+      <!-- Step 2 — deposit / PayPal -->
+      <ng-container *ngIf="checkoutStep === 2">
+        <h2 class="checkout-title">{{ copy.checkout.summaryTitle }}</h2>
+        <dl class="checkout-summary">
+          <dt>{{ copy.checkout.summaryTour }}</dt><dd>{{ tour.title }}</dd>
+          <dt>{{ copy.checkout.summaryRiders }}</dt><dd>{{ checkout.riders }}</dd>
+          <dt>{{ copy.checkout.summaryExperience }}</dt>
+          <dd>
+            <span *ngFor="let level of checkout.experienceLevels; let last = last">
+              {{ copy.checkout.experienceOptions[level] }}{{ last ? '' : ', ' }}
+            </span>
+          </dd>
+          <dt>{{ copy.checkout.summaryDates }}</dt><dd>{{ formattedDateRange() }}</dd>
+          <dt>{{ copy.checkout.summaryPhone }}</dt><dd>{{ checkout.phone }}</dd>
+          <dt>{{ copy.checkout.summaryContact }}</dt>
+          <dd>
+            <ng-container [ngSwitch]="checkout.preferredContact">
+              <span *ngSwitchCase="'whatsapp'">{{ copy.checkout.contactOptions.whatsapp }}</span>
+              <span *ngSwitchCase="'phone'">{{ copy.checkout.contactOptions.phone }}</span>
+              <span *ngSwitchCase="'email'">{{ copy.checkout.contactOptions.email }}</span>
+              <span *ngSwitchCase="'other'">{{ checkout.contactOther }}</span>
+            </ng-container>
+          </dd>
+          <ng-container *ngIf="bookingExtras.newTires">
+            <dt>{{ copy.checkout.summaryExtras }}</dt>
+            <dd>{{ copy.newTires }} ({{ copy.newTiresPrice }})</dd>
+          </ng-container>
+        </dl>
+
+        <h3 class="checkout-payment-heading">
+          {{ copy.checkout.paymentHeading }}
+          <mat-icon
+            class="secure-payment-info"
+            tabindex="0"
+            role="img"
+            [attr.aria-label]="copy.checkout.securePaymentInfo"
+            [matTooltip]="copy.checkout.securePaymentInfo"
+            matTooltipPosition="above"
+          >info_outline</mat-icon>
+        </h3>
+        <div class="paypal-buttons">
+          <div class="paypal-button-container" id="paypal-button-container"></div>
+        </div>
+
+        <div class="checkout-submitting" *ngIf="submittingBooking">
+          <div class="spinner"></div>
+          <span>{{ copy.checkout.submitting }}</span>
+        </div>
+
+        <button type="button" class="checkout-back" (click)="backToForm()" [disabled]="submittingBooking">
+          <mat-icon>arrow_back</mat-icon>
+          {{ copy.checkout.backButton }}
+        </button>
+      </ng-container>
+
+      <!-- Step 3 — success -->
+      <ng-container *ngIf="checkoutStep === 3">
+        <div class="checkout-success">
+          <mat-icon class="checkout-success-icon">check_circle</mat-icon>
+          <h2 class="checkout-title">{{ copy.checkout.successTitle }}</h2>
+          <p class="checkout-subtitle">
+            {{ bookingError ? copy.checkout.emailFallback : copy.checkout.successBody }}
+          </p>
+          <button type="button" class="checkout-primary" (click)="closeCheckout()">
+            {{ copy.checkout.successClose }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<div class="tour-not-found" *ngIf="!tour">
+  <mat-card>
+    <mat-card-content>
+      <div class="not-found-content">
+        <mat-icon>error_outline</mat-icon>
+        <h2>{{ copy.notFoundHeading }}</h2>
+        <p>{{ copy.notFoundBody }}</p>
+        <button mat-raised-button color="primary" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          {{ copy.backToTours }}
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

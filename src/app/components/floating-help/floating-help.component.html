@@ -1,0 +1,99 @@
+<div class="floating-help-container" (click)="$event.stopPropagation()">
+  <!-- Backdrop to close when clicking outside -->
+  <div 
+    class="backdrop" 
+    *ngIf="isExpanded" 
+    (click)="closeHelp()">
+  </div>
+  
+  <!-- Help Options (appear when expanded, before choosing email) -->
+  <div class="help-options" *ngIf="isExpanded && !showEmailForm">
+    <button
+      class="help-option-button"
+      (click)="callUs()">
+      <mat-icon>phone</mat-icon>
+      <span class="help-option-text">{{ copy.callLabel }}</span>
+    </button>
+
+    <button
+      class="help-option-button whatsapp-btn"
+      (click)="openWhatsApp()">
+      <mat-icon svgIcon="whatsapp"></mat-icon>
+      <span class="help-option-text">{{ copy.whatsappLabel }}</span>
+    </button>
+
+    <button
+      class="help-option-button"
+      (click)="openEmail()">
+      <mat-icon>email</mat-icon>
+      <span class="help-option-text">{{ copy.emailLabel }}</span>
+    </button>
+  </div>
+
+  <!-- Inline email form (replaces options once "Email" is chosen) -->
+  <div class="help-email-form" *ngIf="isExpanded && showEmailForm">
+    <div class="help-email-form__header">
+      <button type="button" class="help-email-form__back" (click)="backToOptions()" [attr.aria-label]="formCopy.snackbarClose">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span class="help-email-form__title">{{ copy.emailLabel }}</span>
+    </div>
+
+    <form [formGroup]="emailForm" (ngSubmit)="submitEmail()" class="help-email-form__body">
+      <label class="help-field">
+        <span class="help-field__label">{{ formCopy.nameLabel }}</span>
+        <input type="text" formControlName="name" [placeholder]="formCopy.namePlaceholder">
+        <span class="help-field__error" *ngIf="emailForm.get('name')?.touched && emailForm.get('name')?.invalid">
+          {{ getErrorMessage('name') }}
+        </span>
+      </label>
+
+      <label class="help-field">
+        <span class="help-field__label">{{ formCopy.emailLabel }}</span>
+        <input type="email" formControlName="email" [placeholder]="formCopy.emailPlaceholder">
+        <span class="help-field__error" *ngIf="emailForm.get('email')?.touched && emailForm.get('email')?.invalid">
+          {{ getErrorMessage('email') }}
+        </span>
+      </label>
+
+      <label class="help-field">
+        <span class="help-field__label">{{ formCopy.messageLabel }}</span>
+        <textarea formControlName="message" rows="3" [placeholder]="formCopy.messagePlaceholder"></textarea>
+        <span class="help-field__error" *ngIf="emailForm.get('message')?.touched && emailForm.get('message')?.invalid">
+          {{ getErrorMessage('message') }}
+        </span>
+      </label>
+
+      <button type="submit" class="help-email-form__submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? formCopy.sending : formCopy.send }}
+      </button>
+    </form>
+  </div>
+  
+  <!-- Main Help Button -->
+  <button
+    mat-fab
+    color="primary"
+    class="main-help-btn"
+    [attr.aria-label]="copy.contactPrompt"
+    [attr.aria-expanded]="isExpanded"
+    (click)="toggleHelp()">
+    <mat-icon [class.rotated]="isExpanded">
+      {{ isExpanded ? 'close' : 'email' }}
+    </mat-icon>
+  </button>
+  
+  <!-- Persistent Contact Us Text -->
+  <div class="contact-text" *ngIf="!isExpanded">
+    {{ copy.contactPrompt }}
+  </div>
+</div>
+
+<app-feedback-dialog
+  *ngIf="feedbackVisible"
+  [type]="feedbackType"
+  [title]="feedbackTitle"
+  [message]="feedbackMessage"
+  [closeLabel]="formCopy.snackbarClose"
+  (closed)="closeFeedback()">
+</app-feedback-dialog>

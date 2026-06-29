@@ -1,0 +1,201 @@
+<div class="accommodation-container">
+  <div class="accommodation-header">
+    <h1>{{ copy.h1 }}</h1>
+    <h2>{{ copy.subtitle }}</h2>
+    <p class="intro-text">{{ copy.intro }}</p>
+  </div>
+
+  <div class="accommodation-content">
+    <!-- Hotel Images Section -->
+    <section class="hotel-showcase">
+      <div class="images-grid">
+        <div class="main-image">
+          <img
+            src="assets/home-videos-compressed/accommodation/hotel-1.jpg"
+            [alt]="copy.imageAlts.hotelExterior"
+            loading="lazy"
+          />
+          <!-- (load)="onImageLoad('hotel-main')"
+               (error)="onImageError('hotel-main')"
+               [style.display]="isImageLoaded('hotel-main') ? 'block' : 'none'" -->
+          <!-- <div class="image-placeholder" [style.display]="isImageLoaded('hotel-main') ? 'none' : 'flex'">
+            <div class="loading-spinner"></div>
+          </div> -->
+        </div>
+        <div class="side-images">
+          <div class="side-image">
+            <img
+              src="assets/home-videos-compressed/accommodation/hotel-room-1.jpg"
+              [alt]="copy.imageAlts.hotelRoom"
+              loading="lazy"
+            />
+            <!-- (load)="onImageLoad('room-1')"
+                 (error)="onImageError('room-1')"
+                 [style.display]="isImageLoaded('room-1') ? 'block' : 'none'" -->
+            <!-- <div class="image-placeholder" [style.display]="isImageLoaded('room-1') ? 'none' : 'flex'"
+            >
+              <div class="loading-spinner"></div>
+            </div> -->
+          </div>
+          <div class="side-image">
+            <img
+              src="assets/home-videos-compressed/accommodation/lounge-1.jpg"
+              [alt]="copy.imageAlts.hotelLounge"
+              loading="lazy"
+            />
+            <!-- (load)="onImageLoad('lounge-1')"
+                 (error)="onImageError('lounge-1')"
+                 [style.display]="isImageLoaded('lounge-1') ? 'block' : 'none'" -->
+            <!-- <div class="image-placeholder" [style.display]="isImageLoaded('lounge-1') ? 'none' : 'flex'">
+              <div class="loading-spinner"></div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dining Section -->
+    <section class="dining-section">
+      <h2>{{ copy.dining.heading }}</h2>
+      <div class="section-content">
+        <div class="text-content">
+          <p>{{ copy.dining.body }}</p>
+        </div>
+        <div class="dining-images">
+          <div class="dining-grid">
+            <div class="dining-image large">
+              <img
+                src="assets/home-videos-compressed/accommodation/dining-1.jpg"
+                [alt]="copy.imageAlts.dining1"
+                loading="lazy"
+              />
+              <!-- (load)="onImageLoad('dining-1')"
+                   (error)="onImageError('dining-1')"
+                   [style.display]="isImageLoaded('dining-1') ? 'block' : 'none'" -->
+              <!-- <div class="image-placeholder" [style.display]="isImageLoaded('dining-1') ? 'none' : 'flex'">
+                <div class="loading-spinner"></div>
+              </div> -->
+            </div>
+            <div class="dining-image">
+              <img
+                src="assets/home-videos-compressed/accommodation/dining-2.jpg"
+                [alt]="copy.imageAlts.dining2"
+                loading="lazy"
+              />
+              <!-- (load)="onImageLoad('dining-2')"
+                   (error)="onImageError('dining-2')"
+                   [style.display]="isImageLoaded('dining-2') ? 'block' : 'none'" -->
+              <!-- <div class="image-placeholder" [style.display]="isImageLoaded('dining-2') ? 'none' : 'flex'">
+                <div class="loading-spinner"></div>
+              </div> -->
+            </div>
+            <div class="dining-image">
+              <img
+                src="assets/home-videos-compressed/accommodation/dining-3.jpg"
+                [alt]="copy.imageAlts.dining3"
+                loading="lazy"
+              />
+              <!-- (load)="onImageLoad('dining-3')"
+                   (error)="onImageError('dining-3')"
+                   [style.display]="isImageLoaded('dining-3') ? 'block' : 'none'" -->
+              <!-- <div class="image-placeholder" [style.display]="isImageLoaded('dining-3') ? 'none' : 'flex'">
+                <div class="loading-spinner"></div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pool Section -->
+    <section class="pool-section">
+      <h2>{{ copy.pool.heading }}</h2>
+      <div class="section-content">
+        <div class="text-content">
+          <p>{{ copy.pool.body }}</p>
+        </div>
+        <div class="pool-images">
+          <div class="pool-grid">
+            <div class="pool-image large">
+              <img
+                src="assets/home-videos-compressed/accommodation/pool-1.jpg"
+                [alt]="copy.imageAlts.poolIndoor"
+                loading="lazy"
+              />
+            </div>
+            <div class="pool-image">
+              <img
+                src="assets/home-videos-compressed/accommodation/pool-2.jpg"
+                [alt]="copy.imageAlts.poolArea"
+                loading="lazy"
+              />
+            </div>
+            <div class="pool-image">
+              <img
+                src="assets/home-videos-compressed/accommodation/pool-3.jpg"
+                [alt]="copy.imageAlts.poolFacilities"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spa Center Section -->
+    <section class="spa-section">
+      <h2>{{ copy.spa.heading }}</h2>
+      <div class="section-content">
+        <div class="text-content">
+          <p>{{ copy.spa.body }}</p>
+        </div>
+        <div class="spa-images">
+          <div class="spa-grid">
+            <div class="spa-image large">
+              <img
+                src="assets/home-videos-compressed/accommodation/spa-1.jpg"
+                [alt]="copy.imageAlts.spaRelax"
+                loading="lazy"
+              />
+            </div>
+            <div class="spa-image">
+              <img
+                src="assets/home-videos-compressed/accommodation/spa-2.jpg"
+                [alt]="copy.imageAlts.spaTreatment"
+                loading="lazy"
+              />
+            </div>
+            <div class="spa-image">
+              <img
+                src="assets/home-videos-compressed/accommodation/jacuzzi-1.jpg"
+                [alt]="copy.imageAlts.jacuzzi"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fitness Section -->
+    <section class="fitness-section">
+      <h2>{{ copy.fitness.heading }}</h2>
+      <div class="section-content">
+        <div class="text-content">
+          <p>{{ copy.fitness.body }}</p>
+        </div>
+        <div class="fitness-images">
+          <div class="fitness-grid">
+            <div class="fitness-image large">
+              <img
+                src="assets/home-videos-compressed/accommodation/fitness-1.jpg"
+                [alt]="copy.imageAlts.fitness"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

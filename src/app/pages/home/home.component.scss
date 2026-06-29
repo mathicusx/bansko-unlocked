@@ -1,0 +1,1339 @@
+@import "../../shared/styles/mixins";
+
+.home-container {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-container);
+  @include theme-transition;
+  padding: 2rem 0;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0;
+  }
+}
+
+// Hero Section
+.hero-section {
+  position: relative;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+// Declarative crossfade slider. Every slide is stacked in the same box; only
+// the active one is opaque. The whole thing sits behind a single dark overlay
+// (which keeps the hero caption legible) and below the hero content.
+//
+// z-index: -2 keeps the entire media subtree painted BEHIND .hero-content
+// (which is z-index 1). The slide/overlay z-indexes below only order things
+// *within* this -2 stacking context — they can't escape above the content.
+// pointer-events: none makes the video purely decorative, so hovering the hero
+// never triggers the browser's native <video> controls (PiP, play, etc.) and
+// the CTA buttons always stay clickable.
+.media-background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+
+  .media-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+    will-change: opacity, transform;
+    backface-visibility: hidden; // Better performance
+    z-index: 1;
+
+    // The active slide fades + gently settles in; the outgoing one fades out.
+    // Pure opacity/transform crossfade — no manual DOM mutation, no layer swap.
+    &.is-active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+    }
+
+    video,
+    img,
+    picture,
+    picture img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    // The hero video mounts on idle and stacks above the poster <img>. Fade it
+    // in (matching the 0.8s slider crossfade) once it actually starts playing,
+    // so the poster→motion handoff is a smooth dissolve rather than a pop.
+    video {
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+
+      &.is-ready {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.media-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3; // above the slides, below .hero-content
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+// Hero content entrance — runs once on first paint, no JS required.
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content {
+  text-align: center;
+  color: white;
+  z-index: 1;
+  max-width: 800px;
+  padding: 0 20px;
+
+  // Entrance is a pure-CSS animation, so the hero NEVER depends on JS to become
+  // visible. This used to be a JS-toggled `.animate-hero` class added via rAF
+  // after view init — on a hard refresh it occasionally never fired (rAF
+  // throttled while the tab wasn't focused, or it raced hydration), leaving the
+  // title + buttons stuck at opacity:0. opacity:1 is now the base state, so
+  // even if the animation is skipped (or reduced-motion is on) the content
+  // shows.
+  opacity: 1;
+  animation: heroReveal 0.8s ease both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  .media-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    opacity: 0.8;
+
+    .media-indicator {
+      font-size: 1rem;
+      font-weight: 300;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+
+      @media (max-width: 768px) {
+        font-size: 0.9rem;
+      }
+    }
+
+    .media-counter {
+      font-size: 0.9rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+
+      @media (max-width: 768px) {
+        font-size: 0.8rem;
+        padding: 3px 10px;
+      }
+    }
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
+
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    line-height: 1.4;
+
+    @media (max-width: 768px) {
+      font-size: 1.3rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.1rem;
+    }
+  }
+
+  // Hero caption crossfade. The component (animateContentSlide) toggles
+  // .is-hidden and swaps the text at the hidden midpoint, so the caption fades
+  // out → swaps → fades in in lockstep with the background media crossfade.
+  // 0.4s = half of the 0.8s media transitionDuration, so out + in spans exactly
+  // one media swap. Replaces the old slide-content keyframes, which swapped text
+  // instantly and only ever played the slide-in once.
+  .hero-title,
+  .hero-subtitle {
+    backface-visibility: hidden; // Better performance
+    will-change: transform, opacity; // GPU acceleration
+    transition: opacity 0.4s ease, transform 0.4s ease;
+
+    &.is-hidden {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      gap: 1.5rem;
+      flex-direction: column;
+    }
+  }
+
+  .book-button {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    background: var(--brand-primary);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 25px var(--brand-accent-strong);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px var(--brand-accent-strong);
+      background: var(--brand-primary);
+    }
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .button-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+      padding: 12px 24px;
+      letter-spacing: 0.5px;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      font-size: 0.9rem;
+      padding: 10px 20px;
+
+      .button-text {
+        max-width: 180px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      font-size: 0.8rem;
+      padding: 8px 16px;
+
+      .button-text {
+        max-width: 140px;
+      }
+    }
+  }
+
+  // Buggy is the supporting product: surface it as a quiet text link beneath
+  // the primary CTA rather than a competing button.
+  .buggy-prompt {
+    margin: 1.25rem 0 0;
+    text-align: center;
+    color: #ffffff; // sits on the photo-overlay hero
+    font-size: 1rem;
+    font-weight: 300;
+
+    .buggy-link {
+      color: var(--brand-primary);
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+
+      &:hover,
+      &:focus-visible {
+        border-bottom-color: var(--brand-primary);
+      }
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+    }
+  }
+
+  .learn-more-button {
+    font-size: 1.1rem;
+    padding: 12px 25px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    mat-icon {
+      margin-left: 8px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1rem;
+      padding: 12px 24px;
+    }
+  }
+
+  .media-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .media-nav-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+      }
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
+
+// Content Section
+.content-section {
+  min-height: 50vh;
+  padding: 40px 20px;
+  background-color: var(--bg-primary);
+  box-shadow: 0 4px 20px var(--shadow);
+  margin: 2rem;
+  border-radius: 16px;
+  @include theme-transition;
+
+  @media (max-width: 768px) {
+    margin: 1rem;
+    padding: 60px 20px;
+  }
+}
+
+// Buggy Tours Banner
+.buggy-tours-banner {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  box-shadow: 0 4px 20px var(--shadow);
+  margin: 2rem;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  // Animated border glow
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff6b35, #f7c948, #ff6b35, #f7c948);
+    background-size: 400% 400%;
+    border-radius: 18px;
+    z-index: -1;
+    animation: borderGlow 3s ease-in-out infinite;
+  }
+
+  @media (max-width: 768px) {
+    margin: 1rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .buggy-banner-content {
+    max-width: 700px;
+    margin: 0 auto;
+
+    .buggy-new-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff6b35, #f7c948);
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 0.5rem 2rem;
+      border-radius: 25px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 1.5rem;
+      animation: buggyBadgePulse 2s ease-in-out infinite;
+      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 1.7rem;
+      }
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      font-weight: 300;
+
+      @media (max-width: 768px) {
+        font-size: 1.05rem;
+      }
+    }
+
+    .buggy-cta-button {
+      font-size: 1.1rem;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #ff6b35, #f7c948);
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(255, 107, 53, 0.6);
+      }
+
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 1rem;
+        padding: 12px 26px;
+      }
+    }
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes buggyBadgePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
+  }
+}
+
+// Why Choose Us Section
+.why-choose-us-section {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  box-shadow: 0 4px 20px var(--shadow);
+  margin: 2rem;
+  border-radius: 16px;
+  @include theme-transition;
+
+  @media (max-width: 768px) {
+    margin: 1rem;
+    padding: 40px 20px;
+  }
+
+  .why-choose-us-container {
+    padding: 0 2rem 2rem 2rem;
+    position: relative;
+    z-index: 2;
+
+    @media (max-width: 768px) {
+      padding: 0 1rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--brand-primary);
+        border-radius: 2px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      h2 {
+        font-size: 2.8rem;
+        @include brand-primary;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        font-weight: 700;
+
+        @media (max-width: 768px) {
+          font-size: 2.5rem;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 2rem;
+        }
+      }
+
+      p {
+        font-size: 1.3rem;
+        font-weight: 400;
+        @include text-secondary;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 4px var(--shadow);
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+        letter-spacing: 0.01em;
+
+        @media (max-width: 768px) {
+          font-size: 1.15rem;
+          line-height: 1.5;
+        }
+      }
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+
+      @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .feature-card {
+        @include themed-card(0.5rem);
+        border: 1px solid var(--brand-accent);
+        border-top: 3px solid var(--brand-primary);
+        border-radius: 4px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+
+        // Hover glow effect
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            45deg,
+            var(--brand-accent),
+            var(--brand-accent-strong)
+          );
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          z-index: 1;
+        }
+
+        &:hover {
+          transform: translateY(-8px) scale(1.02);
+          border-color: var(--brand-primary);
+          box-shadow: 0 15px 35px var(--shadow-medium),
+            0 0 30px var(--brand-accent-strong);
+
+          &::before {
+            opacity: 1;
+          }
+
+          .feature-icon {
+            transform: scale(1.1);
+
+            img {
+              filter: brightness(1.1) contrast(1.2);
+              transform: scale(1.05);
+            }
+
+            mat-icon {
+              color: var(--brand-secondary);
+            }
+          }
+        }
+
+        .feature-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 200px;
+          background: linear-gradient(
+            45deg,
+            var(--brand-accent),
+            var(--brand-accent-strong)
+          );
+          border-radius: 3px;
+          margin-bottom: 1.5rem;
+          transition: all 0.3s ease;
+          position: relative;
+          z-index: 2;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            filter: brightness(0.9) contrast(1.1);
+          }
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            @include brand-primary;
+            transition: color 0.3s ease;
+          }
+        }
+
+        .feature-content {
+          position: relative;
+          z-index: 2;
+
+          h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            @include text-primary;
+            margin-bottom: 1rem;
+            line-height: 1.25;
+            text-shadow: 0 2px 4px var(--shadow);
+
+            @media (max-width: 768px) {
+              font-size: 1.25rem;
+            }
+          }
+
+          p {
+            font-size: 1.05rem;
+            font-weight: 400;
+            @include text-secondary;
+            line-height: 1.7;
+            margin: 0;
+            text-shadow: 0 1px 2px var(--shadow);
+
+            @media (max-width: 768px) {
+              font-size: 0.95rem;
+              line-height: 1.6;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animations for headers (like booking component)
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateX(-50%) scaleX(1.2);
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 20px var(--brand-accent-strong);
+  }
+  100% {
+    text-shadow: 0 0 30px var(--brand-accent-strong),
+      0 0 40px var(--brand-accent);
+  }
+}
+
+// Animation for gradient text
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+// FAQ Section
+.faq-section {
+  position: relative;
+  padding: 40px 20px;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  box-shadow: 0 4px 20px var(--shadow);
+  margin: 2rem;
+  border-radius: 16px;
+  @include theme-transition;
+
+  @media (max-width: 768px) {
+    margin: 1rem;
+    padding: 40px 20px;
+  }
+}
+
+// Booking Section
+.booking-section {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  box-shadow: 0 4px 20px var(--shadow);
+  margin: 2rem;
+  border-radius: 16px;
+  @include theme-transition;
+
+  @media (max-width: 768px) {
+    margin: 1rem;
+    padding: 40px 20px;
+  }
+
+  .booking-container {
+    max-width: 1000px;
+    margin: 0 auto;
+
+    .booking-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      @include text-primary;
+      
+      @media (min-width: 769px) {
+        margin: 2rem 0;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-shadow: 1px 1px 2px var(--shadow);
+
+        @media (max-width: 768px) {
+          font-size: 2rem;
+        }
+      }
+
+      p {
+        font-size: 1.2rem;
+        font-weight: 300;
+        opacity: 0.9;
+
+        @media (max-width: 768px) {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .booking-widget {
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 10px 30px var(--shadow-medium);
+      margin-bottom: 2rem;
+
+      div[data-cal-link] {
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      @media (max-width: 768px) {
+        padding: 0.5rem;
+        margin: 0 -10px 2rem -10px;
+
+        div[data-cal-link] {
+          height: 400px !important;
+        }
+      }
+    }
+
+    .booking-actions {
+      text-align: center;
+
+      .full-booking-btn {
+        background: var(--brand-primary);
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 500;
+        padding: 15px 30px;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 25px var(--brand-accent-strong);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 35px var(--brand-accent-strong);
+          background: var(--brand-primary);
+        }
+
+        mat-icon {
+          margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+          font-size: 1rem;
+          padding: 12px 24px;
+        }
+      }
+    }
+  }
+}
+
+// Phone Section
+.phone-section {
+  padding: 80px 20px;
+  text-align: center;
+  @include text-primary;
+  transform: translateY(50px);
+  opacity: 0;
+  transition: all 0.8s ease;
+  background-color: var(--bg-primary);
+  box-shadow: 0 4px 20px var(--shadow);
+  margin: 2rem;
+  border-radius: 16px;
+  @include theme-transition;
+
+  @media (max-width: 768px) {
+    margin: 1rem;
+    padding: 40px 20px;
+  }
+
+  &.animate-up {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .phone-container {
+    max-width: 800px;
+    margin: 0 auto;
+
+    h3 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px 2px var(--shadow);
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
+    }
+
+    .phone-numbers {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .phone-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        @include text-primary;
+        text-decoration: none;
+        font-size: 1.4rem;
+        font-weight: 500;
+        padding: 15px 25px;
+        border: 2px solid var(--bg-tertiary);
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        background: var(--bg-tertiary);
+        backdrop-filter: blur(10px);
+
+        &:hover {
+          transform: translateY(-2px);
+          border-color: var(--brand-primary);
+          background: var(--brand-accent);
+          box-shadow: 0 8px 25px var(--shadow-medium);
+        }
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        @media (max-width: 768px) {
+          font-size: 1.2rem;
+          padding: 12px 20px;
+        }
+      }
+
+      .separator {
+        font-size: 1.8rem;
+        font-weight: 300;
+        opacity: 0.7;
+
+        @media (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// Keyframes for sliding animations
+@keyframes slideInFromRight {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutToLeft {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInSlideUp {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 0 15px;
+  }
+
+  .content-section {
+    padding: 60px 15px;
+  }
+
+  .phone-section {
+    padding: 60px 15px;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// "From the Trail" blog teaser — card chrome mirrors .why-choose-us-section;
+// grid/card styles mirror the About page's blog preview.
+.blog-preview-section {
+  background-color: var(--bg-primary);
+  box-shadow: 0 4px 20px var(--shadow);
+  margin: 2rem;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  @include theme-transition;
+
+  @include mobile {
+    margin: 1rem;
+    padding: 2rem 1rem;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    padding-top: 1rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: var(--brand-primary);
+      border-radius: 2px;
+    }
+
+    h2 {
+      font-size: 2.8rem;
+      @include brand-primary;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 30px var(--brand-accent-strong);
+      margin: 1rem 0 0;
+
+      @include mobile {
+        font-size: 1.8rem;
+      }
+    }
+  }
+
+  .blog-preview {
+    max-width: 1100px;
+    margin: 0 auto;
+
+    &__lede {
+      text-align: center;
+      font-size: 1.1rem;
+      @include text-secondary;
+      line-height: 1.85;
+      max-width: 700px;
+      margin: 1rem auto 0;
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+
+      @include tablet {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      @include mobile {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &__all {
+      display: block;
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      @include accent-readable;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .blog-card {
+      @include themed-card(0);
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--bg-tertiary);
+      @include theme-transition;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 28px var(--brand-accent-strong);
+        border-color: var(--brand-primary);
+      }
+
+      &__media {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+      }
+
+      &:hover &__media img {
+        transform: scale(1.04);
+      }
+
+      &__body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      &__date {
+        font-size: 0.8rem;
+        @include text-secondary;
+        opacity: 0.7;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      &__title {
+        font-size: 1rem;
+        font-weight: 700;
+        @include text-primary;
+        line-height: 1.4;
+        margin-bottom: 0.75rem;
+      }
+
+      &__excerpt {
+        font-size: 0.9rem;
+        @include text-secondary;
+        line-height: 1.6;
+        flex: 1;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      &__read {
+        font-size: 0.85rem;
+        font-weight: 600;
+        @include accent-readable;
+        letter-spacing: 0.3px;
+      }
+    }
+  }
+}
+
+// ─── Activities overview (home) ────────────────────────────────────────────
+.activities-section {
+  padding: 3rem 1.5rem;
+
+  .activities-overview {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    h2 {
+      font-size: 2.2rem;
+      color: var(--brand-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 30px var(--brand-accent-strong);
+      margin: 0 0 0.75rem;
+
+      @include mobile {
+        font-size: 1.8rem;
+      }
+    }
+
+    p {
+      @include text-secondary;
+      font-weight: 300;
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .activity-card {
+    @include themed-card(0);
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px var(--shadow-medium);
+    }
+
+    &__media {
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+    }
+
+    &:hover &__media img {
+      transform: scale(1.05);
+    }
+
+    &__body {
+      padding: 1.1rem 1.3rem 1.4rem;
+    }
+
+    &__title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      @include text-primary;
+      margin: 0 0 0.4rem;
+    }
+
+    &__tagline {
+      @include text-secondary;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      margin: 0 0 0.9rem;
+    }
+
+    &__cta {
+      color: var(--accent-readable);
+      font-weight: 600;
+    }
+  }
+
+  .activities-overview__all {
+    display: block;
+    text-align: center;
+    margin-top: 2.5rem;
+    color: var(--accent-readable);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

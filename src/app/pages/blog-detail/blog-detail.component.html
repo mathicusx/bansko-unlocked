@@ -1,0 +1,68 @@
+<article class="post" *ngIf="post; else missing">
+  <div class="post__content">
+    <nav class="post__breadcrumbs" aria-label="Breadcrumb">
+      <a routerLink="/">{{ ui.breadcrumbHome }}</a>
+      <span aria-hidden="true">›</span>
+      <a routerLink="/blog">{{ ui.breadcrumbBlog }}</a>
+      <span aria-hidden="true">›</span>
+      <span aria-current="page">{{ post.title }}</span>
+    </nav>
+
+    <header class="post__header">
+      <h1 class="post__title">{{ post.title }}</h1>
+      <div class="post__title-accent"></div>
+      <div class="post__meta">
+        <span class="post__meta-chip">
+          <time [attr.datetime]="post.publishedDate">
+            {{ post.publishedDate | date: 'longDate' }}
+          </time>
+        </span>
+        <span class="post__meta-chip">{{ readingMinutes }} {{ ui.minRead }}</span>
+        <span class="post__meta-chip">{{ ui.by }} {{ post.author || 'Enduro Brothers' }}</span>
+      </div>
+    </header>
+  </div>
+
+  <figure class="post__hero">
+    <img
+      [src]="post.heroImage"
+      [alt]="post.heroAlt"
+      loading="eager"
+      decoding="async"
+    />
+    <div class="post__hero-gradient"></div>
+  </figure>
+
+  <div class="post__content">
+    <div class="post__body" [innerHTML]="bodyHtml" (click)="onBodyClick($event)"></div>
+
+    <footer class="post__footer">
+      <p class="post__fb" *ngIf="post.facebookUrl">
+        {{ ui.originallySharedPre }}
+        <a [href]="post.facebookUrl" target="_blank" rel="noopener noreferrer">
+          {{ ui.originallySharedLink }}
+        </a>{{ ui.originallySharedPost }}
+      </p>
+
+      <div class="post__cta">
+        <p>{{ ui.ctaPrompt }}</p>
+        <div class="post__cta-buttons">
+          <a routerLink="/enduro-tours" class="post__cta-btn post__cta-btn--primary">
+            {{ ui.ctaTours }}
+          </a>
+          <a routerLink="/contact" class="post__cta-btn">{{ ui.ctaContact }}</a>
+        </div>
+      </div>
+
+      <a routerLink="/blog" class="post__back">{{ ui.back }}</a>
+    </footer>
+  </div>
+</article>
+
+<ng-template #missing>
+  <section class="post-missing">
+    <h1>{{ ui.notFoundHeading }}</h1>
+    <p>{{ ui.notFoundBody }}</p>
+    <a routerLink="/blog" class="post__cta-btn post__cta-btn--primary">{{ ui.notFoundBrowse }}</a>
+  </section>
+</ng-template>

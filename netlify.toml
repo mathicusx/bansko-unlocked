@@ -1,0 +1,62 @@
+# Netlify routing.
+#
+# Real files in dist/.../browser/ (e.g. /robots.txt, /sitemap.xml, every
+# prerendered route folder like /about, /enduro-tours, /blog/...) are served
+# directly by Netlify before any redirect rule fires. The rules below only
+# apply to URLs that don't match a real file.
+#
+# /admin and /admin/* stay SPA-routed so the auth flow can hand off to the
+# client-side router. Everything else falls through to /404.html with a
+# proper 404 status — this prevents the historical soft-404 problem where
+# unshipped locales like /ru/, /de/, /pl/ used to return 200 + the static
+# index.html shell (indexable, stale title, weakened SEO signal).
+#
+# pretty_urls = false stops Netlify auto-redirecting /about → /about/. With
+# pretty URLs on, every prerendered route returns a 301 to its trailing-slash
+# form, which bleeds link equity on every indexed page and adds a hop the
+# crawler has to follow. Sitemap and canonical URLs are no-slash; we want
+# Netlify to serve those forms directly with 200.
+
+[build.processing.html]
+  pretty_urls = false
+
+[[redirects]]
+  from = "/admin"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
+# Cache headers — Lighthouse "use efficient cache lifetimes" was flagging the
+# static assets. Hashed JS/CSS bundles and image/font assets are content-
+# addressed (Angular's filename hash or a stable basename), so they can be
+# cached aggressively for a year. The HTML shell is NOT cached long because
+# index.html points at the latest bundles and the SEO meta tags can change.
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

@@ -1,0 +1,1362 @@
+@import "../../shared/styles/mixins";
+
+.tour-detail-container {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 50%,
+    var(--bg-tertiary) 100%
+  );
+  padding-bottom: 2rem;
+  @include theme-transition;
+}
+
+.tour-hero {
+  position: relative;
+  height: 60vh;
+  overflow: hidden;
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+
+    .back-button {
+      align-self: flex-start;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      backdrop-filter: blur(10px);
+      @include theme-transition;
+
+      &:hover {
+        @include brand-bg-primary;
+      }
+    }
+
+    .hero-content {
+      color: white;
+      text-align: center;
+
+      h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+
+        @media (max-width: 768px) {
+          font-size: 2rem;
+        }
+      }
+
+      .hero-description {
+        font-size: 1.2rem;
+        font-weight: 300;
+        max-width: 800px;
+        margin: 0 auto;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+
+        @media (max-width: 768px) {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+.tour-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0rem;
+  }
+}
+
+.tour-info-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.pricing-full-width {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.info-card,
+.included-card,
+.pricing-card,
+.description-card,
+.requirements-card,
+.itinerary-card,
+.faq-card,
+.why-different-card {
+  @include themed-card;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  mat-card-header {
+    mat-card-title {
+      @include text-primary;
+      font-size: 1.5rem;
+      font-weight: 600;
+
+      @media (max-width: 768px) {
+       padding-bottom: 1rem;
+      }
+    }
+  }
+
+  mat-card-content {
+    @include text-secondary;
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+    background: var(--brand-accent);
+    border-radius: 12px;
+    border: 1px solid var(--brand-accent-strong);
+    @include theme-transition;
+    position: relative;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      bottom: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--brand-accent-strong) 50%,
+        transparent 100%
+      );
+    }
+
+    &:hover {
+      border-color: var(--brand-primary);
+      box-shadow: 0 4px 15px rgba(var(--brand-primary-rgb), 0.1);
+      transform: translateY(-2px);
+    }
+
+    mat-icon {
+      @include brand-primary;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(var(--brand-primary-rgb), 0.3));
+    }
+
+    strong {
+      @include text-primary;
+      display: block;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .difficulty-badges {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .difficulty-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 768px) {
+      padding: 1rem;
+      gap: 0.75rem;
+
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+
+      strong {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  mat-icon {
+    @include brand-primary;
+    flex-shrink: 0;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    strong {
+      @include text-primary;
+      font-weight: 600;
+    }
+
+    span {
+      @include text-secondary;
+    }
+  }
+}
+
+.pricing-card {
+  .promo-countdown-section {
+    margin-bottom: 1.5rem;
+
+    // Static "Valid for <period> bookings" badge — shown instead of the
+    // countdown when the promo carries a booking-period label. Matches the
+    // tour-card badge in booking.component.scss.
+    .promo-info {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      column-gap: 0.5rem;
+      row-gap: 0.25rem;
+      background: green;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+      text-align: center;
+      line-height: 1.2;
+
+      span {
+        white-space: nowrap;
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+
+      .promo-separator {
+        margin: 0 0.25rem;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .price-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 0;
+    width: 100%;
+
+    .price-option {
+      text-align: center;
+      padding: 1rem;
+      background: var(--brand-accent);
+      border-radius: 8px;
+      border: 1px solid var(--brand-accent-strong);
+      @include theme-transition;
+      width: 100%;
+
+      .currency {
+        font-size: 0.9rem;
+        @include brand-primary;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .price-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .old-price {
+        font-size: 1.25rem;
+        font-weight: 600;
+        @include text-secondary;
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+
+      .price {
+        font-size: 2rem;
+        font-weight: 800;
+        @include text-primary;
+        margin-bottom: 0.25rem;
+        display: block;
+
+        &.promo-price {
+          font-size: 2.5rem;
+          color: #22c55e;
+          animation: pulse 2s ease-in-out infinite;
+        }
+      }
+
+      .discount-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .per-person {
+        font-size: 0.9rem;
+        @include text-secondary;
+        display: block;
+      }
+    }
+
+    .price-divider {
+      text-align: center;
+      @include text-secondary;
+      font-style: italic;
+      font-size: 0.9rem;
+      margin: -0.5rem 0;
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .pricing-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 3rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 2rem;
+    }
+  }
+
+  .pricing-left {
+    flex: 1;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  .pricing-right {
+    flex: 1;
+    padding-left: 3rem;
+    border-left: 2px solid var(--brand-accent-strong);
+    position: relative;
+
+    @media (max-width: 768px) {
+      padding-left: 0;
+      border-left: none;
+      border-top: 2px solid var(--brand-accent-strong);
+      padding-top: 2rem;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--brand-primary), transparent);
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+  }
+
+  .payment-section {
+    margin-top: 0;
+
+    .deposit-info {
+      text-align: center;
+      margin-bottom: 1.5rem;
+
+      h3 {
+        @include text-primary;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        @include text-secondary;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+    }
+
+    .paypal-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .paypal-option {
+        .paypal-button-container {
+          min-height: 55px;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+      }
+    }
+
+    .deposit-note {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      @include text-secondary;
+      font-size: 0.85rem;
+      background: var(--brand-accent);
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--brand-accent-strong);
+
+      mat-icon {
+        color: var(--brand-primary);
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+
+      span {
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+.description-card,
+.requirements-card,
+.faq-card,
+.why-different-card {
+  margin-bottom: 2rem;
+}
+
+.included-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .included-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    @include theme-transition;
+
+    &:hover {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      transform: translateX(5px);
+    }
+
+    mat-icon {
+      color: #22c55e;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    span {
+      @include text-primary;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.requirements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+
+  .requirement-section {
+    h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      @include text-primary;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+
+      mat-icon {
+        @include brand-primary;
+      }
+    }
+
+    p {
+      @include text-secondary;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+}
+
+.tour-not-found {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 50%,
+    var(--bg-tertiary) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  @include theme-transition;
+
+  mat-card {
+    @include themed-card;
+    backdrop-filter: blur(10px);
+
+    .not-found-content {
+      text-align: center;
+      @include text-primary;
+      padding: 2rem;
+
+      mat-icon {
+        font-size: 4rem;
+        width: 4rem;
+        height: 4rem;
+        @include brand-primary;
+        margin-bottom: 1rem;
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      p {
+        @include text-secondary;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
+
+      button {
+        @include brand-bg-primary;
+        color: white;
+        @include theme-transition;
+
+        &:hover {
+          background-color: var(--brand-secondary);
+        }
+
+        mat-icon {
+          font-size: 1.2rem;
+          width: auto;
+          height: auto;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+// Itinerary Timeline Styles
+.itinerary-card {
+  margin-bottom: 2rem;
+
+  .itinerary-timeline {
+    position: relative;
+    padding-left: 2rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 1rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(
+        to bottom,
+        var(--brand-primary),
+        var(--brand-secondary)
+      );
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+
+      &.last-item {
+        margin-bottom: 0;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      .timeline-marker {
+        position: absolute;
+        left: -2rem;
+        top: 0.25rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        background: var(--brand-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid var(--bg-primary);
+        box-shadow: 0 4px 15px rgba(var(--brand-primary-rgb), 0.3);
+        z-index: 2;
+
+        .day-number {
+          color: white;
+          font-weight: 700;
+          font-size: 0.9rem;
+        }
+      }
+
+      .timeline-content {
+        background: var(--brand-accent);
+        border: 1px solid var(--brand-accent-strong);
+        border-radius: 12px;
+        padding: 0;
+        margin-left: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        @include theme-transition;
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: -8px;
+          top: 1rem;
+          width: 0;
+          height: 0;
+          border-top: 8px solid transparent;
+          border-bottom: 8px solid transparent;
+          border-right: 8px solid var(--brand-accent-strong);
+          z-index: 2;
+        }
+
+        .timeline-image {
+          width: 250px;
+          height: 180px;
+          flex-shrink: 0;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+          }
+        }
+
+        .timeline-text {
+          padding: 1.5rem;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          .day-title {
+            @include text-primary;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--brand-primary);
+          }
+
+          .day-description {
+            @include text-secondary;
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95rem;
+          }
+        }
+      }
+
+      &:hover .timeline-content {
+        border-color: var(--brand-primary);
+        box-shadow: 0 4px 15px rgba(var(--brand-primary-rgb), 0.1);
+        transform: translateX(5px);
+
+        .timeline-image img {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}
+
+.included-tagline {
+  margin-top: 1rem;
+  font-style: italic;
+  @include text-secondary;
+  font-size: 0.9rem;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .faq-item {
+    padding: 1.25rem;
+    background: var(--brand-accent);
+    border-radius: 12px;
+    border: 1px solid var(--brand-accent-strong);
+    @include theme-transition;
+
+    &:hover {
+      border-color: var(--brand-primary);
+      transform: translateX(5px);
+    }
+
+    h3 {
+      @include text-primary;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      @include text-secondary;
+      line-height: 1.5;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.why-different-content {
+  text-align: center;
+  padding: 1rem 0;
+
+  p {
+    @include text-secondary;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+
+    li {
+      @include text-primary;
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      position: relative;
+
+      &::before {
+        content: "✦ ";
+        @include brand-primary;
+      }
+    }
+  }
+
+  .why-tagline {
+    @include text-primary;
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-style: italic;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+  }
+}
+
+// Mobile responsive styles for itinerary
+@media (max-width: 768px) {
+  .itinerary-card {
+    .itinerary-timeline {
+      padding-left: 1.5rem;
+
+      &::before {
+        left: 0.75rem;
+      }
+
+      .timeline-item {
+        padding-left: 1rem;
+
+        .timeline-marker {
+          left: -1.5rem;
+          width: 2rem;
+          height: 2rem;
+
+          .day-number {
+            font-size: 0.8rem;
+          }
+        }
+
+        .timeline-content {
+          margin-left: 0.25rem;
+          flex-direction: column;
+
+          &::before {
+            left: -6px;
+            border-right-width: 6px;
+            border-top-width: 6px;
+            border-bottom-width: 6px;
+          }
+
+          .timeline-image {
+            width: 100%;
+            height: 150px;
+            flex-shrink: 0;
+          }
+
+          .timeline-text {
+            padding: 1rem;
+            justify-content: flex-start;
+
+            .day-title {
+              font-size: 1.1rem;
+              margin-bottom: 0.5rem;
+            }
+
+            .day-description {
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Draft state — admin-only visibility cue on draft tours.
+.draft-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  background-color: #f59e0b;
+  color: #1f2937;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.publish-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #1f2937;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+}
+
+// ===================== Pre-booking checkout dialog =====================
+// Ported from tour-detail so the buggy "Reserve" flow matches the enduro one.
+.reserve-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 1rem 1.75rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  background: var(--brand-primary);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: var(--brand-secondary);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  mat-icon {
+    color: #ffffff;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.whatsapp-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 1rem;
+  border: 2px solid #25d366;
+  border-radius: 50px;
+  color: #25d366;
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background: #25d366;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+
+    .whatsapp-icon {
+      color: #ffffff;
+    }
+  }
+
+  .whatsapp-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: #25d366;
+    transition: color 0.2s ease;
+  }
+}
+
+.checkout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  @include fade-in(0.2s);
+}
+
+.checkout-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  @include themed-card(2rem);
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-tertiary) transparent;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+  }
+
+  @include mobile {
+    padding: 1.5rem 1.25rem;
+  }
+
+  // Mirror the outline-field theming so Material labels/inputs are readable on
+  // the themed-card surface (the component's ::ng-deep scope doesn't reach here).
+  ::ng-deep {
+    .mat-mdc-form-field.mat-form-field-appearance-outline {
+      .mat-mdc-floating-label {
+        color: var(--text-secondary) !important;
+      }
+
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: var(--bg-tertiary) !important;
+        transition: border-color 0.3s ease;
+      }
+
+      .mdc-text-field:hover .mdc-notched-outline__leading,
+      .mdc-text-field:hover .mdc-notched-outline__notch,
+      .mdc-text-field:hover .mdc-notched-outline__trailing {
+        border-color: var(--brand-primary) !important;
+      }
+
+      .mdc-text-field--focused .mdc-notched-outline__leading,
+      .mdc-text-field--focused .mdc-notched-outline__notch,
+      .mdc-text-field--focused .mdc-notched-outline__trailing {
+        border-color: var(--brand-primary) !important;
+        border-width: 2px !important;
+      }
+
+      .mdc-text-field--invalid:not(.mdc-text-field--focused) {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: var(--bg-tertiary) !important;
+        }
+        .mat-mdc-floating-label {
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      input,
+      textarea {
+        color: var(--text-primary) !important;
+        caret-color: var(--brand-primary);
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--text-secondary) !important;
+        opacity: 0.85;
+      }
+
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text-primary) !important;
+        -webkit-box-shadow: 0 0 0 1000px var(--bg-secondary) inset !important;
+        caret-color: var(--brand-primary);
+        transition: background-color 9999s ease-in-out 0s;
+      }
+
+      .mat-mdc-form-field-focus-overlay {
+        background: transparent !important;
+      }
+    }
+
+    .mdc-label,
+    .mat-mdc-checkbox label {
+      color: var(--text-primary);
+    }
+  }
+}
+
+.checkout-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  @include text-secondary;
+  display: flex;
+  padding: 0.25rem;
+  border-radius: 50%;
+
+  &:hover {
+    @include brand-primary;
+  }
+}
+
+.checkout-title {
+  @include brand-primary;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  padding-right: 2rem;
+}
+
+.checkout-subtitle {
+  @include text-secondary;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .full-width {
+    width: 100%;
+  }
+}
+
+.checkout-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.checkout-label {
+  @include text-primary;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.checkout-hint {
+  @include text-secondary;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.checkout-experience-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .extras-checkbox {
+    @include text-primary;
+
+    ::ng-deep .mdc-label {
+      @include text-primary;
+    }
+  }
+}
+
+.checkout-contact-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkout-riders-field {
+  width: 8rem;
+  margin-bottom: 0.5rem;
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+.checkout-primary {
+  @include themed-button(primary);
+  // The button is brand-red in BOTH themes, so its label must stay white in
+  // both — themed-button(primary) uses --text-inverse, which goes near-black in
+  // the dark theme and renders dark-on-red. Force white here.
+  color: #ffffff;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.9rem 1.5rem;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  mat-icon {
+    color: inherit;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.checkout-back {
+  @include themed-button(secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.checkout-summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1.5rem;
+
+  dt {
+    @include text-secondary;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  dd {
+    @include text-primary;
+    font-size: 0.95rem;
+    margin: 0;
+    text-align: right;
+  }
+}
+
+.checkout-payment-heading {
+  @include text-primary;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  .secure-payment-info {
+    font-size: 1.15rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--text-secondary);
+    cursor: help;
+    @include theme-transition;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--brand-primary);
+    }
+  }
+}
+
+// PayPal injects its buttons AND (when "Debit or Credit Card" is picked) an
+// inline card form into #paypal-button-container. That form is rendered with a
+// transparent background, so on our dark dialog its labels ("Billing address",
+// the close X, etc.) become dark-on-dark and hard to read. We can't style
+// PayPal's cross-origin iframe, but we CAN put a light backdrop BEHIND it so
+// the transparent regions sit on white instead. PayPal's own buttons keep
+// their colours; only the see-through gaps change.
+.checkout-dialog .paypal-buttons {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 0.75rem;
+
+  .paypal-button-container {
+    min-height: 55px;
+  }
+}
+
+.checkout-submitting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  @include text-secondary;
+  margin-top: 1rem;
+}
+
+.checkout-success {
+  text-align: center;
+  padding: 1rem 0;
+
+  .checkout-title,
+  .checkout-subtitle {
+    text-align: center;
+    padding-right: 0;
+  }
+
+  .checkout-primary {
+    margin-top: 1rem;
+  }
+}
+
+.checkout-success-icon {
+  color: #22c55e;
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+}

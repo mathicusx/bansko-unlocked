@@ -1,0 +1,24 @@
+<div class="activities-page">
+  <header class="activities-page__header">
+    <h1>Things to Do in Bansko</h1>
+    <p>
+      ATV &amp; buggy tours, the shooting range, mountain camping and winter snow riding —
+      pick your adventure and we'll handle the rest.
+    </p>
+  </header>
+
+  <div class="activities-page__grid">
+    @for (a of activities; track a.slug) {
+      <a class="activity-card" [routerLink]="['/activities', a.slug]">
+        <div class="activity-card__media">
+          <img [src]="a.heroImage | optimize:800" [alt]="a.heroAlt" loading="lazy" decoding="async" />
+        </div>
+        <div class="activity-card__body">
+          <h2 class="activity-card__title">{{ a.name }}</h2>
+          <p class="activity-card__tagline">{{ a.tagline }}</p>
+          <span class="activity-card__cta">Explore <mat-icon>arrow_forward</mat-icon></span>
+        </div>
+      </a>
+    }
+  </div>
+</div>

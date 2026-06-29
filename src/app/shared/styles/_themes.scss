@@ -1,0 +1,103 @@
+// Theme CSS Custom Properties
+//
+// Bansko Unlocked — "Glacier Teal + Navy" palette. Brand tokens are glacier
+// teal; dark theme uses a midnight-navy background family, light theme a cool
+// off-white. The theme switch is preserved exactly as before.
+:root {
+  // Light Theme Colors
+  --bg-primary-light: #f4fafb;
+  --bg-secondary-light: #e8f3f5;
+  --bg-tertiary-light: #d7eaed;
+  --text-primary-light: #0b1f2a;
+  --text-secondary-light: #0b1f2a;
+  --text-inverse-light: #ffffff;
+
+  // Sidenav specific colors for light theme
+  --sidenav-bg-light: #f4fafb;
+  --sidenav-bg-secondary-light: #e8f3f5;
+  --sidenav-text-light: #0b1f2a;
+  --sidenav-border-light: rgba(11, 31, 42, 0.12);
+
+  // Dark Theme Colors (midnight navy family)
+  --bg-primary-dark: #0b1f2a;
+  --bg-secondary-dark: #102a38;
+  --bg-tertiary-dark: #16384a;
+  --text-primary-dark: #eaf6f8;
+  --text-secondary-dark: #ffffff;
+  --text-inverse-dark: #0b1f2a;
+
+  // Sidenav specific colors for dark theme
+  --sidenav-bg-dark: #102a38;
+  --sidenav-bg-secondary-dark: #16384a;
+  --sidenav-text-dark: #ffffff;
+  --sidenav-border-dark: rgba(15, 181, 181, 0.25);
+
+  // Brand Colors (same for both themes) — glacier teal + gold accent
+  --brand-primary: #0fb5b5;
+  --brand-secondary: #2dd4d4;
+  --brand-tertiary: #0e8c8c;
+  --brand-accent: rgba(15, 181, 181, 0.1);
+  --brand-accent-strong: rgba(15, 181, 181, 0.22);
+
+  // Warm gold accent — secondary highlight (badges, dividers, hover glow).
+  --brand-gold: #f2c14e;
+
+  // Contrast-safe teal for small text. Brand teal (#0fb5b5) fails WCAG AA as
+  // text on light surfaces, so teal text (prices, "read more" links, mailto)
+  // uses this theme-aware token instead — darker on light, brighter on dark.
+  --accent-readable-light: #0a7a7a;
+  --accent-readable-dark: #3fe0e0;
+
+  // Scrollbar Colors
+  --scrollbar-track-light: linear-gradient(135deg, #e8f3f5 0%, #d7eaed 100%);
+  --scrollbar-thumb-light: linear-gradient(135deg, #0fb5b5 0%, #2dd4d4 100%);
+  --scrollbar-track-dark: linear-gradient(135deg, #102a38 0%, #16384a 100%);
+  --scrollbar-thumb-dark: linear-gradient(135deg, #0fb5b5 0%, #2dd4d4 100%);
+  
+  // Shadow Colors
+  --shadow-light: rgba(0, 0, 0, 0.4);
+  --shadow-medium-light: rgba(0, 0, 0, 0.15);
+  --shadow-dark: rgba(0, 0, 0, 0.3);
+  --shadow-medium-dark: rgba(0, 0, 0, 0.5);
+  
+  // Current Theme Variables (default to dark)
+  --bg-primary: var(--bg-primary-dark);
+  --bg-secondary: var(--bg-secondary-dark);
+  --bg-tertiary: var(--bg-tertiary-dark);
+  --text-primary: var(--text-primary-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --text-inverse: var(--text-inverse-dark);
+  --accent-readable: var(--accent-readable-dark);
+  --scrollbar-track: var(--scrollbar-track-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  --shadow: var(--shadow-dark);
+  --shadow-medium: var(--shadow-medium-dark);
+  
+  // Sidenav Variables
+  --sidenav-bg: var(--sidenav-bg-dark);
+  --sidenav-bg-secondary: var(--sidenav-bg-secondary-dark);
+  --sidenav-text: var(--sidenav-text-dark);
+  --sidenav-border: var(--sidenav-border-dark);
+}
+
+// Light Theme Override
+[data-theme="light"] {
+  --bg-primary: var(--bg-primary-light);
+  --bg-secondary: var(--bg-secondary-light);
+  --bg-tertiary: var(--bg-tertiary-light);
+  --text-primary: var(--text-primary-light);
+  --text-secondary: var(--text-secondary-light);
+  --text-inverse: var(--text-inverse-light);
+  --accent-readable: var(--accent-readable-light);
+  --scrollbar-track: var(--scrollbar-track-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --shadow: var(--shadow-light);
+  --shadow-medium: var(--shadow-medium-light);
+  
+  // Sidenav follows light theme colors
+  --sidenav-bg: var(--sidenav-bg-light);
+  --sidenav-bg-secondary: var(--sidenav-bg-secondary-light);
+  --sidenav-text: var(--sidenav-text-light);
+  --sidenav-border: var(--sidenav-border-light);
+}
+

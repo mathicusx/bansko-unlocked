@@ -1,0 +1,200 @@
+// Theme Mixins for reusability across components
+
+// Theme transition mixin for smooth theme switching
+@mixin theme-transition($duration: 0.3s, $properties: (background-color, color, border-color, box-shadow)) {
+  $transition-list: ();
+  
+  @each $property in $properties {
+    $transition-list: append($transition-list, #{$property} #{$duration} ease, comma);
+  }
+  
+  transition: $transition-list;
+}
+
+// Background mixins
+@mixin bg-primary {
+  background-color: var(--bg-primary);
+  @include theme-transition;
+}
+
+@mixin bg-secondary {
+  background-color: var(--bg-secondary);
+  @include theme-transition;
+}
+
+@mixin bg-tertiary {
+  background-color: var(--bg-tertiary);
+  @include theme-transition;
+}
+
+// Text mixins
+@mixin text-primary {
+  color: var(--text-primary);
+  @include theme-transition;
+}
+
+@mixin text-secondary {
+  color: var(--text-secondary);
+  @include theme-transition;
+}
+
+@mixin text-inverse {
+  color: var(--text-inverse);
+  @include theme-transition;
+}
+
+// Brand color mixins
+@mixin brand-primary {
+  color: var(--brand-primary);
+}
+
+// Contrast-safe red text — passes WCAG AA on both light and dark surfaces.
+// Use instead of `brand-primary` for any small red text.
+@mixin accent-readable {
+  color: var(--accent-readable);
+  @include theme-transition;
+}
+
+@mixin brand-bg-primary {
+  background-color: var(--brand-primary);
+}
+
+@mixin brand-border {
+  border: 1px solid var(--brand-primary);
+}
+
+// Card mixin with theme support
+@mixin themed-card($padding: 1rem) {
+  @include bg-secondary;
+  @include text-primary;
+  padding: $padding;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  border: 1px solid var(--bg-tertiary);
+  @include theme-transition(0.3s, (background-color, color, border-color, box-shadow));
+}
+
+// Button mixin with theme support
+@mixin themed-button($variant: primary) {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  
+  @if $variant == primary {
+    @include brand-bg-primary;
+    // The brand background is glacier teal (--brand-primary #0fb5b5) in BOTH
+    // themes. White text on teal fails WCAG AA, so primary buttons use a fixed
+    // dark navy. Do NOT use --text-inverse here: it flips with the theme and
+    // would render light-on-teal in light mode. Hardcode the non-flipping navy.
+    color: #0b1f2a;
+
+    &:hover {
+      background-color: var(--brand-secondary);
+      box-shadow: 0 4px 12px var(--brand-accent-strong);
+    }
+  } @else if $variant == secondary {
+    @include bg-secondary;
+    @include text-primary;
+    @include brand-border;
+    
+    &:hover {
+      background-color: var(--brand-accent);
+    }
+  }
+}
+
+// Navigation active state
+@mixin nav-active {
+  @include text-inverse;
+  background: linear-gradient(
+    45deg,
+    var(--brand-accent-strong),
+    var(--brand-accent)
+  ) !important;
+  border: 1px solid var(--brand-accent-strong) !important;
+  box-shadow: 0 0 15px var(--brand-accent-strong) !important;
+  border-radius: 12px !important;
+}
+
+// Scrollbar mixin
+@mixin themed-scrollbar($width: 12px) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 6px;
+    border: 1px solid var(--brand-accent);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 6px;
+    border: 2px solid var(--bg-secondary);
+    box-shadow: 0 2px 8px var(--brand-accent-strong);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(135deg, var(--brand-secondary) 0%, var(--brand-primary) 100%);
+      box-shadow: 0 4px 12px var(--brand-accent-strong);
+      transform: scale(1.1);
+    }
+
+    &:active {
+      background: linear-gradient(135deg, var(--brand-tertiary) 0%, var(--brand-primary) 100%);
+    }
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: var(--bg-secondary);
+  }
+}
+
+// Responsive breakpoints
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: 769px) and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1025px) {
+    @content;
+  }
+}
+
+// Animation mixins
+@mixin fade-in($duration: 0.3s) {
+  opacity: 0;
+  animation: fadeIn $duration ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@mixin slide-in-from-top($duration: 0.5s) {
+  transform: translateY(-20px);
+  opacity: 0;
+  animation: slideInFromTop $duration ease-out forwards;
+}
+
+@keyframes slideInFromTop {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

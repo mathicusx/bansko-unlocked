@@ -1,0 +1,1248 @@
+@import "../../shared/styles/mixins";
+
+.about-container {
+  min-height: 100vh;
+  @include bg-primary;
+  @include text-primary;
+
+  .about-header {
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(
+        90deg,
+        var(--brand-primary),
+        var(--brand-secondary),
+        var(--brand-primary)
+      );
+      border-radius: 2px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: var(--brand-primary);
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+      font-weight: 700;
+      text-shadow: 0 0 30px var(--brand-accent-strong);
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+      @include text-secondary;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 4px var(--shadow);
+      font-style: italic;
+    }
+  }
+
+  .about-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8rem;
+
+    section {
+      h2 {
+        font-size: 2.2rem;
+        color: var(--brand-primary);
+        margin-bottom: 3rem;
+        margin-top: 1rem;
+        font-weight: 700;
+        text-shadow: 0 0 30px var(--brand-accent-strong);
+        animation: glow 3s ease-in-out infinite alternate;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: -20px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100px;
+          height: 4px;
+          background: linear-gradient(
+            90deg,
+            var(--brand-primary),
+            var(--brand-secondary),
+            var(--brand-primary)
+          );
+          border-radius: 2px;
+          animation: pulse 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+          font-size: 1.8rem;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 1.6rem;
+        }
+      }
+    }
+
+    .our-story {
+      .story-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+
+        .story-text {
+          h2 {
+            font-size: 2rem;
+            color: var(--brand-primary);
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-shadow: 0 0 30px var(--brand-accent-strong);
+            animation: glow 3s ease-in-out infinite alternate;
+
+            @media (max-width: 768px) {
+              font-size: 1.6rem;
+            }
+
+            @media (max-width: 480px) {
+              font-size: 1.4rem;
+            }
+          }
+
+          p {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            @include text-secondary;
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+
+            strong {
+              @include brand-primary;
+              font-weight: 600;
+            }
+          }
+        }
+
+        .story-image {
+          img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px var(--brand-accent-strong);
+            @include theme-transition;
+
+            &:hover {
+              transform: scale(1.02);
+            }
+          }
+        }
+      }
+    }
+
+    .stats-section {
+      @include themed-card(4rem 2rem);
+      background: linear-gradient(
+        135deg,
+        var(--bg-secondary) 0%,
+        var(--bg-tertiary) 100%
+      );
+      border-radius: 12px;
+      border: 1px solid var(--bg-tertiary);
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+
+        .stat-card {
+          @include bg-primary;
+          padding: 2rem;
+          border-radius: 8px;
+          text-align: center;
+          border: 1px solid var(--bg-tertiary);
+          @include theme-transition;
+
+          &:hover {
+            border-color: var(--brand-primary);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--brand-accent-strong);
+          }
+
+          .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            @include brand-primary;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px var(--brand-accent-strong);
+          }
+
+          .stat-label {
+            font-size: 0.9rem;
+            @include text-secondary;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .location-section {
+      .location-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+
+        .location-image {
+          img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+          }
+        }
+
+        .location-text {
+          h2 {
+            font-size: 2rem;
+            color: var(--brand-primary);
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-shadow: 0 0 30px var(--brand-accent-strong);
+            animation: glow 3s ease-in-out infinite alternate;
+
+            @media (max-width: 768px) {
+              font-size: 1.6rem;
+            }
+
+            @media (max-width: 480px) {
+              font-size: 1.4rem;
+            }
+          }
+
+          p {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            @include text-secondary;
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+
+            strong {
+              @include text-primary;
+              font-weight: 600;
+            }
+          }
+
+          .highlight-box {
+            background: linear-gradient(
+              135deg,
+              var(--brand-tertiary) 0%,
+              var(--brand-primary) 100%
+            );
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            color: #ffff;
+            font-size: 1rem;
+            font-weight: 400;
+            border-left: 4px solid var(--text-inverse);
+
+            strong {
+              display: block;
+              margin-bottom: 0.5rem;
+              font-size: 1.1rem;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+
+    .founder-story {
+      @include themed-card(4rem 2rem);
+      background: linear-gradient(
+        135deg,
+        var(--bg-secondary) 0%,
+        var(--bg-tertiary) 100%
+      );
+      border-radius: 12px;
+      border: 1px solid var(--bg-tertiary);
+
+      .founder-content {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 4rem;
+        margin-top: 3rem;
+
+        .founder-text {
+          h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            @include text-secondary;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px var(--shadow);
+          }
+
+          p {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            @include text-secondary;
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            font-style: italic;
+          }
+
+          .founder-quote {
+            @include bg-primary;
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--brand-primary);
+            margin-top: 2rem;
+
+            em {
+              font-size: 1.2rem;
+              @include text-primary;
+              font-weight: 600;
+              line-height: 1.6;
+            }
+          }
+        }
+
+        .founder-achievements {
+          h4 {
+            font-size: 1.3rem;
+            @include text-secondary;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px var(--shadow);
+          }
+
+          .achievement-list {
+            list-style: none;
+            padding: 0;
+
+            li {
+              display: flex;
+              align-items: center;
+              padding: 0.8rem 0;
+              @include text-secondary;
+              opacity: 0.95;
+              font-size: 1rem;
+              font-weight: 400;
+              border-bottom: 1px solid var(--bg-tertiary);
+
+              .icon {
+                margin-right: 1rem;
+                font-size: 1.2rem;
+              }
+
+              &:last-child {
+                border-bottom: none;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .team-teaser {
+      text-align: center;
+
+      &__lede {
+        font-size: 1.1rem;
+        @include text-secondary;
+        line-height: 1.85;
+        max-width: 700px;
+        margin: 0 auto 2.5rem;
+      }
+
+      &__photo {
+        width: 100%;
+        max-height: 480px;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px var(--shadow-medium);
+        margin-bottom: 2.5rem;
+
+        img {
+          width: 100%;
+          height: 480px;
+          object-fit: cover;
+          display: block;
+
+          @include mobile {
+            height: 260px;
+          }
+        }
+      }
+
+      &__cta {
+        display: inline-block;
+        text-decoration: none;
+        color: #ffffff;
+        background: var(--brand-primary);
+        border: none;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        box-shadow: 0 8px 25px var(--brand-accent-strong);
+        @include theme-transition;
+
+        &:hover {
+          transform: translateY(-2px);
+          background: var(--brand-secondary);
+          box-shadow: 0 12px 35px var(--brand-accent-strong);
+        }
+      }
+    }
+
+    .blog-preview {
+      &__lede {
+        text-align: center;
+        font-size: 1.1rem;
+        @include text-secondary;
+        line-height: 1.85;
+        max-width: 700px;
+        margin: 0 auto 3rem;
+      }
+
+      &__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+
+        @include tablet {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        @include mobile {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      &__all {
+        display: block;
+        text-align: center;
+        margin-top: 2.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        @include brand-primary;
+        text-decoration: none;
+        letter-spacing: 0.5px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .blog-card {
+        @include themed-card(0);
+        border-radius: 8px;
+        overflow: hidden;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--bg-tertiary);
+        @include theme-transition;
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 28px var(--brand-accent-strong);
+          border-color: var(--brand-primary);
+        }
+
+        &__media {
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+          }
+
+          &:hover img {
+            transform: scale(1.04);
+          }
+        }
+
+        &__body {
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+        }
+
+        &__date {
+          font-size: 0.8rem;
+          @include text-secondary;
+          opacity: 0.7;
+          margin-bottom: 0.5rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        &__title {
+          font-size: 1rem;
+          font-weight: 700;
+          @include text-primary;
+          line-height: 1.4;
+          margin-bottom: 0.75rem;
+        }
+
+        &__excerpt {
+          font-size: 0.9rem;
+          @include text-secondary;
+          line-height: 1.6;
+          flex: 1;
+          margin-bottom: 1rem;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        &__read {
+          font-size: 0.85rem;
+          font-weight: 600;
+          @include brand-primary;
+          letter-spacing: 0.3px;
+        }
+      }
+    }
+
+    .adventure-collection {
+      .collection-content {
+        .collection-description {
+          text-align: center;
+          font-size: 1.2rem;
+          @include text-secondary;
+          opacity: 0.95;
+          margin-bottom: 3rem;
+          font-weight: 400;
+          line-height: 1.9;
+          max-width: 800px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    }
+  }
+
+  .about-footer {
+    margin-top: 8rem;
+    padding: 3rem 2rem;
+    @include bg-secondary;
+    border-top: 1px solid var(--bg-tertiary);
+    text-align: center;
+
+    p {
+      @include text-secondary;
+      opacity: 0.8;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+  }
+}
+
+// Desktop large screens
+@media (min-width: 1441px) {
+  .about-container {
+    .about-header h1 {
+      font-size: 4rem;
+    }
+
+    .about-content {
+      max-width: 1600px;
+      gap: 10rem;
+
+      .our-story .story-grid {
+        gap: 4rem;
+
+        .story-text h2 {
+          font-size: 2.2rem;
+        }
+
+        .story-image img {
+          height: 450px;
+        }
+      }
+
+      .stats-section {
+        padding: 4.5rem 2rem;
+
+        .stats-grid .stat-card .stat-number {
+          font-size: 3.5rem;
+        }
+      }
+
+      .location-section .location-grid {
+        gap: 4rem;
+
+        .location-text h2 {
+          font-size: 2.2rem;
+        }
+
+        .location-image img {
+          height: 500px;
+        }
+      }
+
+      .founder-story {
+        padding: 4.5rem 2rem;
+
+        .founder-content .founder-text h3 {
+          font-size: 1.6rem;
+        }
+      }
+
+      .team-teaser__photo img {
+        height: 540px;
+      }
+    }
+  }
+}
+
+// Laptop/tablet landscape
+@media (max-width: 1200px) {
+  .about-container {
+    .about-header {
+      padding: 6rem 1.5rem 5rem 1.5rem;
+
+      h1 {
+        font-size: 3rem;
+
+        @media (max-width: 768px) {
+          font-size: 2.5rem;
+        }
+      }
+    }
+
+    .about-content {
+      padding: 0 1.5rem;
+      gap: 7rem;
+
+      .our-story .story-grid {
+        gap: 3rem;
+
+        .story-text {
+          h2 {
+            font-size: 2rem;
+          }
+
+          p {
+            font-size: 1.1rem;
+          }
+        }
+
+        .story-image img {
+          height: 350px;
+        }
+      }
+
+      .stats-section {
+        padding: 3.5rem 1.5rem;
+
+        .stats-grid .stat-card .stat-number {
+          font-size: 2.8rem;
+        }
+      }
+
+      .location-section .location-grid {
+        gap: 3rem;
+
+        .location-text {
+          h2 {
+            font-size: 2rem;
+          }
+
+          p {
+            font-size: 1.1rem;
+          }
+        }
+
+        .location-image img {
+          height: 400px;
+        }
+      }
+
+      .founder-story {
+        padding: 3.5rem 1.5rem;
+
+        .founder-content {
+          gap: 3rem;
+
+          .founder-text {
+            h3 {
+              font-size: 1.6rem;
+            }
+
+            p {
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
+
+// Tablet portrait
+@media (max-width: 1024px) {
+  .about-container {
+    .about-header {
+      padding: 5rem 1rem 4rem 1rem;
+
+      h1 {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+
+        @media (max-width: 768px) {
+          font-size: 2rem;
+        }
+      }
+    }
+
+    .about-content {
+      padding: 0 1.5rem;
+      gap: 6rem;
+
+      section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 3rem;
+      }
+
+      .our-story .story-grid,
+      .location-section .location-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+
+        .story-text,
+        .location-text {
+          text-align: center;
+
+          h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+          }
+        }
+
+        .story-image img,
+        .location-image img {
+          height: 300px;
+        }
+      }
+
+      .stats-section {
+        padding: 3rem 1.5rem;
+
+        .stats-grid {
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 1.5rem;
+
+          .stat-card {
+            padding: 1.5rem;
+
+            .stat-number {
+              font-size: 1.6rem;
+            }
+
+            .stat-label {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+
+      .founder-story {
+        padding: 3rem 1.5rem;
+
+        .founder-content {
+          grid-template-columns: 1fr;
+          gap: 2.5rem;
+
+          .founder-text {
+            text-align: center;
+
+            h3 {
+              font-size: 1.5rem;
+              text-align: center;
+            }
+          }
+
+          .founder-achievements {
+            h4 {
+              text-align: center;
+              font-size: 1.2rem;
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
+
+// Mobile landscape
+@media (max-width: 768px) {
+  .about-container {
+    .about-header {
+      padding: 4rem 1rem 3rem 1rem;
+
+      h1 {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+
+        @media (max-width: 480px) {
+          font-size: 1.8rem;
+        }
+      }
+    }
+
+    .about-content {
+      padding: 0 1rem;
+      gap: 5rem;
+
+      section h2 {
+        font-size: 1.6rem;
+        margin-bottom: 2.5rem;
+        letter-spacing: 2px;
+      }
+
+      .our-story .story-grid {
+        gap: 2rem;
+
+        .story-text {
+          h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+          }
+
+          p {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+          }
+        }
+
+        .story-image img {
+          height: 250px;
+        }
+      }
+
+      .stats-section {
+        padding: 2.5rem 1rem;
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.2rem;
+
+          .stat-card {
+            padding: 1.2rem;
+
+            .stat-number {
+              font-size: 2.2rem;
+            }
+
+            .stat-label {
+              font-size: 0.75rem;
+            }
+          }
+        }
+      }
+
+      .location-section .location-grid {
+        gap: 2rem;
+
+        .location-text {
+          h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+          }
+
+          p {
+            font-size: 1rem;
+            line-height: 1.7;
+          }
+
+          .highlight-box {
+            padding: 1.2rem;
+            font-size: 0.9rem;
+
+            strong {
+              font-size: 1rem;
+            }
+          }
+        }
+
+        .location-image img {
+          height: 250px;
+        }
+      }
+
+      .founder-story {
+        padding: 2.5rem 1rem;
+
+        .founder-content {
+          gap: 2rem;
+
+          .founder-text {
+            h3 {
+              font-size: 1.4rem;
+            }
+
+            p {
+              font-size: 0.95rem;
+              line-height: 1.7;
+            }
+
+            .founder-quote {
+              padding: 1.5rem;
+
+              em {
+                font-size: 1.1rem;
+              }
+            }
+          }
+
+          .founder-achievements {
+            h4 {
+              font-size: 1.1rem;
+            }
+
+            .achievement-list li {
+              font-size: 0.9rem;
+              padding: 0.6rem 0;
+
+              .icon {
+                font-size: 1rem;
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
+
+// Mobile portrait
+@media (max-width: 480px) {
+  .about-container {
+    .about-header {
+      padding: 3rem 0.8rem 2.5rem 0.8rem;
+
+      h1 {
+        font-size: 1.8rem;
+        letter-spacing: 0.5px;
+
+        @media (max-width: 360px) {
+          font-size: 1.6rem;
+        }
+      }
+    }
+
+    .about-content {
+      padding: 0 0.8rem;
+      gap: 4rem;
+
+      section h2 {
+        font-size: 1.4rem;
+        margin-bottom: 2rem;
+        letter-spacing: 1.5px;
+
+        &::before,
+        &::after {
+          width: 40px;
+        }
+      }
+
+      .our-story .story-grid {
+        gap: 1.5rem;
+
+        .story-text {
+          h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+          }
+
+          p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+          }
+        }
+
+        .story-image img {
+          height: 220px;
+        }
+      }
+
+      .stats-section {
+        padding: 2rem 0.8rem;
+
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+
+          .stat-card {
+            padding: 1rem;
+
+            .stat-number {
+              font-size: 1.8rem;
+            }
+
+            .stat-label {
+              font-size: 0.7rem;
+            }
+          }
+        }
+      }
+
+      .location-section .location-grid {
+        gap: 1.5rem;
+
+        .location-text {
+          h2 {
+            font-size: 1.4rem;
+          }
+
+          p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+          }
+
+          .highlight-box {
+            padding: 1rem;
+            font-size: 0.85rem;
+
+            strong {
+              font-size: 0.9rem;
+            }
+          }
+        }
+
+        .location-image img {
+          height: 220px;
+        }
+      }
+
+      .founder-story {
+        padding: 2rem 0.8rem;
+
+        .founder-content {
+          gap: 1.5rem;
+
+          .founder-text {
+            h3 {
+              font-size: 1.2rem;
+            }
+
+            p {
+              font-size: 0.9rem;
+              line-height: 1.6;
+            }
+
+            .founder-quote {
+              padding: 1.2rem;
+
+              em {
+                font-size: 1rem;
+              }
+            }
+          }
+
+          .founder-achievements {
+            h4 {
+              font-size: 1rem;
+            }
+
+            .achievement-list li {
+              font-size: 0.85rem;
+              padding: 0.5rem 0;
+
+              .icon {
+                font-size: 0.9rem;
+              }
+            }
+          }
+        }
+      }
+
+      .adventure-collection .collection-placeholder {
+        padding: 3rem 1.5rem;
+
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .about-footer {
+      margin-top: 6rem;
+      padding: 2rem 1rem;
+
+      p {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Extra small mobile
+@media (max-width: 360px) {
+  .about-container {
+    .about-header h1 {
+      font-size: 1.6rem;
+    }
+
+    .about-content {
+      padding: 0 0.5rem;
+
+      section h2 {
+        font-size: 1.2rem;
+      }
+
+      .our-story .story-grid {
+        .story-text {
+          h2 {
+            font-size: 1.2rem;
+          }
+
+          p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+          }
+        }
+
+        .story-image img {
+          height: 200px;
+        }
+      }
+
+      .stats-section {
+        padding: 1.8rem 0.5rem;
+
+        .stats-grid {
+          gap: 0.8rem;
+
+          .stat-card {
+            padding: 0.8rem;
+
+            .stat-number {
+              font-size: 1.6rem;
+            }
+
+            .stat-label {
+              font-size: 0.65rem;
+            }
+          }
+        }
+      }
+
+      .location-section .location-grid {
+        gap: 1.2rem;
+
+        .location-text {
+          h2 {
+            font-size: 1.2rem;
+          }
+
+          p {
+            font-size: 0.9rem;
+          }
+
+          .highlight-box {
+            padding: 0.8rem;
+            font-size: 0.8rem;
+          }
+        }
+
+        .location-image img {
+          height: 180px;
+        }
+      }
+
+      .founder-story {
+        padding: 1.8rem 0.5rem;
+
+        .founder-content {
+          gap: 1.2rem;
+
+          .founder-text {
+            h3 {
+              font-size: 1.1rem;
+            }
+
+            p {
+              font-size: 0.85rem;
+            }
+
+            .founder-quote {
+              padding: 1rem;
+
+              em {
+                font-size: 0.9rem;
+              }
+            }
+          }
+
+          .founder-achievements {
+            h4 {
+              font-size: 0.9rem;
+            }
+
+            .achievement-list li {
+              font-size: 0.8rem;
+              padding: 0.4rem 0;
+
+              .icon {
+                font-size: 0.85rem;
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+}

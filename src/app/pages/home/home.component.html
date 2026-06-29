@@ -1,0 +1,271 @@
+<!-- Hero Section with rotating background media -->
+<section class="hero-section">
+    <!-- Declarative crossfade slider: every slide is rendered, and the active
+         one gets `.is-active` (CSS fades between them). Slide 0 is the enduro
+         video — SSR-painted and autoplaying so the first thing a visitor sees
+         is real riding; its poster (95KB webp) is the LCP candidate while the
+         4MB MP4 streams in behind it. Gallery stills only get a real `src` once
+         shouldLoad() says so, so they don't compete with the LCP poster. -->
+    <div class="media-background">
+      @for (slide of slides; track slide.src; let i = $index) {
+        <div class="media-slide" [class.is-active]="isActive(i)">
+          @switch (slide.type) {
+            @case ('video') {
+              <!-- LCP element: the poster webp as a real <img> so it paints at
+                   FCP (preloaded fetchpriority=high in index.html). The heavy
+                   MP4 is NOT in the SSR markup — the <video> is mounted only
+                   after hydration on idle (see mountHeroVideoWhenIdle), so the
+                   1.8MB download no longer competes during the LCP window. The
+                   video stacks above this img and covers it once it plays. -->
+              <img
+                [src]="slide.poster"
+                [alt]="homeCopy.media.heroImageAlt"
+                fetchpriority="high"
+                decoding="async"
+              />
+              @if (showHeroVideo) {
+                <video
+                  #heroVideo
+                  [class.is-ready]="heroVideoReady"
+                  (playing)="heroVideoReady = true"
+                  autoplay
+                  muted
+                  playsinline
+                  loop
+                  preload="auto"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  [poster]="slide.poster"
+                  [src]="slide.src"
+                >
+                  {{ homeCopy.media.videoFallback }}
+                </video>
+              }
+            }
+            @case ('promo') {
+              <!-- Art-directed July-sale poster: portrait crop on narrow
+                   viewports, wide crop on desktop. -->
+              @if (shouldLoad(i)) {
+                <picture>
+                  <source media="(max-width: 767px)" [srcset]="slide.srcMobile" />
+                  <img [src]="slide.src" [alt]="homeCopy.media.heroImageAlt" decoding="async" />
+                </picture>
+              }
+            }
+            @default {
+              @if (shouldLoad(i)) {
+                <img [src]="slide.src" [alt]="homeCopy.media.heroImageAlt" loading="lazy" decoding="async" />
+              }
+            }
+          }
+        </div>
+      }
+
+      <div class="media-overlay"></div>
+    </div>
+
+    <div class="hero-content" #heroContent>
+      <h1 class="seo-h1 visually-hidden">{{ homeCopy.seoH1 }}</h1>
+      <h2 class="hero-title" [class.is-hidden]="heroTextHidden">{{ getCurrentMessage().title }}</h2>
+      <p class="hero-subtitle" [class.is-hidden]="heroTextHidden">
+        {{ getCurrentMessage().subtitle }}
+      </p>
+
+      <div class="action-buttons">
+        <button
+          mat-raised-button
+          color="primary"
+          class="book-button"
+          (click)="onBookNow()"
+        >
+          <mat-icon>event_available</mat-icon>
+          <span class="button-text">{{ homeCopy.buttons.bookAdventure }}</span>
+        </button>
+      </div>
+      <p class="buggy-prompt">
+        {{ homeCopy.buttons.buggyPrompt }}
+        <a routerLink="/activities" class="buggy-link">
+          {{ homeCopy.buttons.bookBuggy }} <span aria-hidden="true">&rarr;</span>
+        </a>
+      </p>
+      <!-- Optional manual controls — previousMedia()/nextMedia() are wired and
+           ready if you want to surface prev/next buttons:
+        <div class="media-controls">
+          <button mat-icon-button class="media-nav-btn" (click)="previousMedia()" title="Previous">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button mat-icon-button class="media-nav-btn" (click)="nextMedia()" title="Next">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      -->
+    </div>
+  </section>
+
+<div class="home-container">
+  <!-- Why Choose Us Section -->
+  <section class="why-choose-us-section">
+    <div class="why-choose-us-container">
+      <div class="section-header">
+        <h2>{{ homeCopy.whyChooseUs.heading }}</h2>
+        <p>{{ homeCopy.whyChooseUs.intro }}</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <img src="assets/enduro-gallery/enduro-12-md.webp" [alt]="homeCopy.whyChooseUs.features[0].imageAlt" loading="lazy" decoding="async" />
+          </div>
+          <div class="feature-content">
+            <h3>{{ homeCopy.whyChooseUs.features[0].title }}</h3>
+            <p>{{ homeCopy.whyChooseUs.features[0].body }}</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <img src="assets/home-videos-compressed/accommodation/hotel-1.webp" [alt]="homeCopy.whyChooseUs.features[1].imageAlt" loading="lazy" decoding="async" />
+          </div>
+          <div class="feature-content">
+            <h3>{{ homeCopy.whyChooseUs.features[1].title }}</h3>
+            <p>{{ homeCopy.whyChooseUs.features[1].body }}</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <img src="assets/home-videos-compressed/accommodation/dining-2.webp" [alt]="homeCopy.whyChooseUs.features[2].imageAlt" loading="lazy" decoding="async" />
+          </div>
+          <div class="feature-content">
+            <h3>{{ homeCopy.whyChooseUs.features[2].title }}</h3>
+            <p>{{ homeCopy.whyChooseUs.features[2].body }}</p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <img src="assets/enduro-gallery/enduro-30-md.webp" [alt]="homeCopy.whyChooseUs.features[3].imageAlt" loading="lazy" decoding="async" />
+          </div>
+          <div class="feature-content">
+            <h3>{{ homeCopy.whyChooseUs.features[3].title }}</h3>
+            <p>{{ homeCopy.whyChooseUs.features[3].body }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Below-the-fold sections use incremental hydration: SSR renders the
+       full content (Googlebot sees it), but JS hydration is deferred until
+       the section enters viewport. Cuts initial TBT without hiding content
+       from crawlers. Requires withIncrementalHydration() in app.config.ts. -->
+  <!-- Activities overview grid (replaces the dormant enduro/buggy tour embeds). -->
+  <section class="activities-section">
+    <div class="activities-overview">
+      <div class="section-header">
+        <h2>{{ activitiesCopy.heading }}</h2>
+        <p>{{ activitiesCopy.intro }}</p>
+      </div>
+      <div class="activities-grid">
+        @for (a of activities; track a.slug) {
+          <a class="activity-card" [routerLink]="['/activities', a.slug]">
+            <div class="activity-card__media">
+              <img [src]="a.heroImage" [alt]="a.heroAlt" loading="lazy" decoding="async" />
+            </div>
+            <div class="activity-card__body">
+              <h3 class="activity-card__title">{{ a.name }}</h3>
+              <p class="activity-card__tagline">{{ a.tagline }}</p>
+              <span class="activity-card__cta">{{ activitiesCopy.viewActivity }}</span>
+            </div>
+          </a>
+        }
+      </div>
+      <a routerLink="/activities" class="activities-overview__all">{{ activitiesCopy.viewAll }}</a>
+    </div>
+  </section>
+
+  <!-- Dormant enduro/buggy tour embeds — revive with the itinerary system:
+  @defer (hydrate on viewport) {
+    <section class="booking-section">
+      <app-booking></app-booking>
+    </section>
+  }
+  @defer (hydrate on viewport) {
+    <section class="buggy-tours-section">
+      <app-buggy-tours></app-buggy-tours>
+    </section>
+  }
+  -->
+
+
+    @if (recentPosts.length) {
+    @defer (hydrate on viewport) {
+    <section class="blog-preview-section">
+      <div class="blog-preview">
+        <div class="section-header">
+          <h2>{{ homeCopy.blog.heading }}</h2>
+          <p class="blog-preview__lede">{{ homeCopy.blog.lede }}</p>
+        </div>
+        <div class="blog-preview__grid">
+          @for (post of recentPosts; track post.slug) {
+            <a class="blog-card" [routerLink]="['/blog', post.slug]">
+              <div class="blog-card__media">
+                <img [src]="post.heroImage" [alt]="post.heroAlt" loading="lazy" decoding="async" />
+              </div>
+              <div class="blog-card__body">
+                <p class="blog-card__date">{{ post.publishedDate | date:'d MMM yyyy' }}</p>
+                <h3 class="blog-card__title">{{ post.title }}</h3>
+                <p class="blog-card__excerpt">{{ post.description }}</p>
+                <span class="blog-card__read">{{ homeCopy.blog.readMore }}</span>
+              </div>
+            </a>
+          }
+        </div>
+        <a routerLink="/blog" class="blog-preview__all">{{ homeCopy.blog.allPosts }}</a>
+      </div>
+    </section>
+  }
+  }
+
+  <!-- Reviews embed hidden for launch — no Bansko Unlocked reviews yet.
+  @defer (hydrate on viewport) {
+    <section class="reviews-section">
+      <app-reviews></app-reviews>
+    </section>
+  }
+  -->
+
+  <!-- Instagram feed hidden for launch — it embedded the enduro account's posts.
+  @defer (hydrate on viewport) {
+    <section class="instagram-section">
+      <app-instagram-feed></app-instagram-feed>
+    </section>
+  }
+  -->
+
+
+  @defer (hydrate on viewport) {
+    <section class="faq-section">
+      <app-faq></app-faq>
+    </section>
+  }
+
+
+  <!-- Phone Section -->
+  <!-- <section class="phone-section" #phoneSection>
+    <div class="phone-container">
+      <h3>Contact Us</h3>
+      <div class="phone-numbers">
+        <a id="home-call-link-uk" class="phone-link">
+          <mat-icon>phone</mat-icon>
+          📞 Call UK
+        </a>
+        <span class="separator">/</span>
+        <a id="home-call-link-bg" class="phone-link">
+          <mat-icon>phone</mat-icon>
+          📞 Call Bulgaria
+        </a>
+      </div>
+    </div>
+  </section> -->
+</div>

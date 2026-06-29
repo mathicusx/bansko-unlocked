@@ -1,0 +1,175 @@
+<!-- Header Container -->
+<div class="header-container" [class.header-hidden]="!isHeaderVisible">
+  <!-- Promo Banner -->
+  <div class="promo-banner" *ngIf="showPromoBanner">
+    <div class="promo-content">
+      <div class="promo-scrolling-content" (click)="onPromoClick()" style="cursor: pointer;">
+        <span class="promo-text">
+          <span [innerHTML]="chrome.promo.leadHtml"></span>
+          <ng-container *ngIf="promoSavingsHtml as savings">
+            {{ savings }}
+          </ng-container>
+          {{ chrome.promo.cta }}
+        </span>
+      </div>
+      <button
+        mat-icon-button
+        class="promo-close"
+        (click)="closePromoBanner()"
+        [attr.aria-label]="chrome.promo.closeAria"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <mat-toolbar color="primary" class="navbar">
+    <button mat-icon-button (click)="sidenav.toggle()" class="mobile-menu" [attr.aria-label]="chrome.nav.mobileMenuAria">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <div class="logo-container" (click)="navigateHome()">
+      <!-- Text wordmark placeholder. Swap for an <img [src]="logoUrl"> once a
+           real Bansko Unlocked logo asset exists. -->
+      <span class="logo-wordmark">
+        <span class="logo-wordmark__bansko">BANSKO</span>
+        <span class="logo-wordmark__unlocked">UNLOCKED</span>
+      </span>
+    </div>
+
+    <span class="spacer"></span>
+
+    <!-- Desktop nav -->
+    <div class="desktop-menu">
+      <a
+        mat-button
+        [routerLink]="links.home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >{{ chrome.nav.home }}</a
+      >
+      <a mat-button [routerLink]="links.activities" routerLinkActive="active"
+        >{{ chrome.nav.activities }}</a
+      >
+      <a mat-button [routerLink]="links.about" routerLinkActive="active">{{ chrome.nav.about }}</a>
+      <a mat-button [routerLink]="links.contact" routerLinkActive="active"
+        >{{ chrome.nav.contact }}</a
+      >
+      <button
+        mat-button
+        class="more-trigger"
+        [matMenuTriggerFor]="moreMenu"
+        [attr.aria-label]="chrome.nav.moreMenuAria"
+      >
+        {{ chrome.nav.more }}
+        <mat-icon class="more-caret">expand_more</mat-icon>
+      </button>
+      <mat-menu #moreMenu="matMenu" class="more-menu-panel">
+        <a mat-menu-item [routerLink]="links.team" routerLinkActive="active">{{ chrome.nav.team }}</a>
+        <a mat-menu-item [routerLink]="links.gallery" routerLinkActive="active"
+          >{{ chrome.nav.gallery }}</a
+        >
+        <a mat-menu-item [routerLink]="links.blog" routerLinkActive="active">{{ chrome.nav.blog }}</a>
+        <a mat-menu-item [routerLink]="links.faq" routerLinkActive="active">{{ chrome.nav.faq }}</a>
+      </mat-menu>
+    </div>
+
+    <!-- Theme toggle - positioned at the rightmost side -->
+    <div class="theme-toggle-wrapper">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+  </mat-toolbar>
+</div>
+
+<mat-sidenav-container (backdropClick)="sidenav.close()">
+  <!-- Side nav for mobile -->
+  <mat-sidenav
+    #sidenav
+    mode="over"
+    class="mobile-sidenav"
+    [fixedInViewport]="true"
+    [fixedTopGap]="0"
+    (openedChange)="onSidenavToggle($event)"
+  >
+    <mat-nav-list>
+      <a
+        mat-list-item
+        [routerLink]="links.home"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.home)"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >{{ chrome.nav.home }}</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="links.activities"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.activities)"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >{{ chrome.nav.activities }}</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="links.contact"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.contact)"
+        >{{ chrome.nav.contact }}</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="links.about"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.about)"
+        >{{ chrome.nav.about }}</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="links.team"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.team)"
+        >{{ chrome.nav.team }}</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="links.gallery"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.gallery)"
+        >{{ chrome.nav.gallery }}</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="links.blog"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.blog)"
+        >{{ chrome.nav.blog }}</a
+      >
+      <a
+        mat-list-item
+        [routerLink]="links.faq"
+        routerLinkActive="active"
+        (click)="navigateAndClose(links.faq)"
+        >{{ chrome.nav.faq }}</a
+      >
+
+      <!-- Theme toggle in mobile menu -->
+      <div class="mobile-theme-toggle">
+        <app-theme-toggle></app-theme-toggle>
+        <span class="theme-label">{{ chrome.nav.themeLabel }}</span>
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Main content -->
+  <mat-sidenav-content [class.has-promo-banner]="showPromoBanner">
+    <div class="component-container" [class.is-home]="isHomeRoute">
+      <router-outlet></router-outlet>
+    </div>
+
+    <!-- Footer appears on all pages -->
+    <app-footer></app-footer>
+
+    <!-- Floating help button appears on all pages -->
+    <app-floating-help></app-floating-help>
+  </mat-sidenav-content>
+</mat-sidenav-container>

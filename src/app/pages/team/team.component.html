@@ -1,0 +1,204 @@
+<div class="team-container">
+
+  <header class="team-hero">
+    <h1>{{ copy.h1 }}</h1>
+    <p class="team-lede">{{ copy.lede }}</p>
+  </header>
+
+  <div class="team-group-photo">
+    <img
+      src="assets/team/meet-the-team.jpeg"
+      [alt]="copy.groupPhotoAlt"
+      loading="eager"
+      decoding="async"
+    />
+  </div>
+
+  <section class="guides">
+
+    <article class="guide-card">
+      <div class="guide-portrait">
+        <img
+          src="assets/team/ibrahim.jpeg"
+          [alt]="copy.guides.ibrahim.portraitAlt"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <div class="guide-body">
+        <h2>Ibrahim</h2>
+        <p class="guide-role">{{ copy.guides.ibrahim.role }}</p>
+
+        <div class="guide-stat">
+          <span class="stat-number">15+</span>
+          <span class="stat-label">{{ copy.guides.ibrahim.statLabel }}</span>
+        </div>
+
+        <p class="guide-bio">{{ copy.guides.ibrahim.bio }}</p>
+
+        @if (copy.guides.ibrahim.legend) {
+          <div class="legend-callout">
+            <p>{{ copy.guides.ibrahim.legend }}</p>
+          </div>
+        }
+
+        <h3 class="guide-credentials-heading">{{ copy.specialitiesHeading }}</h3>
+        <ul class="guide-credentials">
+          @for (item of copy.guides.ibrahim.credentials; track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </div>
+    </article>
+
+    <article class="guide-card">
+      <div class="guide-portrait">
+        <img
+          src="assets/team/medy.jpeg"
+          [alt]="copy.guides.medy.portraitAlt"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="guide-body">
+        <h2>Medy</h2>
+        <p class="guide-role">{{ copy.guides.medy.role }}</p>
+
+        <div class="guide-stat">
+          <span class="stat-number">10+</span>
+          <span class="stat-label">{{ copy.guides.medy.statLabel }}</span>
+        </div>
+
+        <p class="guide-bio">{{ copy.guides.medy.bio }}</p>
+
+        @if (copy.guides.medy.legend) {
+          <div class="legend-callout">
+            <p>{{ copy.guides.medy.legend }}</p>
+          </div>
+        }
+
+        <h3 class="guide-credentials-heading">{{ copy.specialitiesHeading }}</h3>
+        <ul class="guide-credentials">
+          @for (item of copy.guides.medy.credentials; track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </div>
+    </article>
+
+    <article class="guide-card">
+      <div class="guide-portrait">
+        <img
+          src="assets/team/funi.jpeg"
+          [alt]="copy.guides.funi.portraitAlt"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="guide-body">
+        <h2>Funi</h2>
+        <p class="guide-role">{{ copy.guides.funi.role }}</p>
+
+        <div class="guide-stat">
+          <span class="stat-number">10+</span>
+          <span class="stat-label">{{ copy.guides.funi.statLabel }}</span>
+        </div>
+
+        <p class="guide-bio">{{ copy.guides.funi.bio }}</p>
+
+        @if (copy.guides.funi.legend) {
+          <div class="legend-callout">
+            <p>{{ copy.guides.funi.legend }}</p>
+          </div>
+        }
+
+        <h3 class="guide-credentials-heading">{{ copy.specialitiesHeading }}</h3>
+        <ul class="guide-credentials">
+          @for (item of copy.guides.funi.credentials; track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </div>
+    </article>
+
+    <article class="guide-card">
+      <div class="guide-portrait">
+        <img
+          src="assets/team/funi-nice.jpeg"
+          [alt]="copy.guides.funiNice.portraitAlt"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="guide-body">
+        <h2>Funi Nice</h2>
+        <p class="guide-role">{{ copy.guides.funiNice.role }}</p>
+
+        <div class="guide-stat">
+          <span class="stat-number">20+</span>
+          <span class="stat-label">{{ copy.guides.funiNice.statLabel }}</span>
+        </div>
+
+        <p class="guide-bio">{{ copy.guides.funiNice.bio }}</p>
+
+        @if (copy.guides.funiNice.legend) {
+          <div class="legend-callout">
+            <p>{{ copy.guides.funiNice.legend }}</p>
+          </div>
+        }
+
+        <h3 class="guide-credentials-heading">{{ copy.specialitiesHeading }}</h3>
+        <ul class="guide-credentials">
+          @for (item of copy.guides.funiNice.credentials; track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="ares-section">
+    <div class="ares-card">
+      <div class="ares-icon">🐾</div>
+      <div class="ares-body">
+        <h2>Ares</h2>
+        <p class="guide-role">{{ copy.ares.role }}</p>
+        <p class="guide-bio">{{ copy.ares.bio }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="why-named-guides">
+    <h2>{{ copy.whyNamedGuides.heading }}</h2>
+    <p>{{ copy.whyNamedGuides.body }}</p>
+  </section>
+
+  <section class="ride-with-us">
+    <h2>{{ copy.rideWithUs.heading }}</h2>
+    <p class="ride-lede">{{ copy.rideWithUs.lede }}</p>
+
+    <div class="ride-cta-grid">
+      <a class="ride-cta" [routerLink]="links.newRidersTour">
+        <span class="ride-cta-label">{{ copy.rideWithUs.newRiders.label }}</span>
+        <span class="ride-cta-title">{{ copy.rideWithUs.newRiders.title }}</span>
+        <span class="ride-cta-meta">{{ copy.rideWithUs.newRiders.meta }}</span>
+      </a>
+
+      <a class="ride-cta" [routerLink]="links.proRidersTour">
+        <span class="ride-cta-label">{{ copy.rideWithUs.experiencedRiders.label }}</span>
+        <span class="ride-cta-title">{{ copy.rideWithUs.experiencedRiders.title }}</span>
+        <span class="ride-cta-meta">{{ copy.rideWithUs.experiencedRiders.meta }}</span>
+      </a>
+    </div>
+
+    <p class="ride-secondary">
+      {{ copy.rideWithUs.secondaryStart }}
+      <a [routerLink]="links.enduroTours">{{ copy.rideWithUs.enduroToursLink }}</a>
+      {{ copy.rideWithUs.secondaryMid }}
+      <a [routerLink]="links.accommodation">{{ copy.rideWithUs.accommodationLink }}</a>
+      {{ copy.rideWithUs.secondaryEnd }}
+    </p>
+  </section>
+
+</div>

@@ -1,0 +1,62 @@
+<div class="no-licence-container">
+  <header class="no-licence-hero">
+    <h1>{{ copy.h1 }}</h1>
+    <p class="intro-text">{{ copy.intro }}</p>
+  </header>
+
+  <div class="no-licence-content">
+    <section class="why-section">
+      <h2>{{ copy.whyHeading }}</h2>
+      <p *ngFor="let paragraph of copy.whyParagraphs">{{ paragraph }}</p>
+    </section>
+
+    <section class="week-section">
+      <h2>{{ copy.weekHeading }}</h2>
+      <div class="week-grid">
+        <article class="week-card" *ngFor="let step of copy.weekSteps">
+          <h3>{{ step.heading }}</h3>
+          <p>{{ step.body }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="tours-section">
+      <h2>{{ copy.toursHeading }}</h2>
+      <p class="tours-lead">{{ copy.toursLead }}</p>
+      <ul class="tour-link-list">
+        <li *ngFor="let tour of copy.tours">
+          <a [routerLink]="tourLink(tour.slug)">
+            {{ tour.title }}
+            <span class="tour-duration">{{ tour.duration }}</span>
+          </a>
+        </li>
+      </ul>
+      <p class="tours-foot">
+        {{ copy.toursFoot.lead
+        }}<a [routerLink]="links.difficulty">{{ copy.toursFoot.difficultyLink }}</a
+        >{{ copy.toursFoot.mid
+        }}<a [routerLink]="links.enduroTours">{{ copy.toursFoot.toursLink }}</a
+        >{{ copy.toursFoot.end }}
+      </p>
+    </section>
+
+    <section class="faq-section">
+      <h2>{{ copy.faqHeading }}</h2>
+      <div class="faq-list">
+        <details *ngFor="let faq of copy.faqs">
+          <summary>{{ faq.question }}</summary>
+          <p>{{ faq.answer }}</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2>{{ copy.ctaHeading }}</h2>
+      <p>{{ copy.ctaBody }}</p>
+      <div class="cta-buttons">
+        <a class="cta-primary" [routerLink]="links.enduroTours">{{ copy.ctaPrimary }}</a>
+        <a class="cta-secondary" [routerLink]="links.contact">{{ copy.ctaSecondary }}</a>
+      </div>
+    </section>
+  </div>
+</div>

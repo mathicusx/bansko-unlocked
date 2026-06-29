@@ -1,0 +1,841 @@
+@import '../../shared/styles/mixins';
+
+.accommodation-container {
+  min-height: 100vh;
+  @include bg-primary;
+  @include text-primary;
+  padding-top: 2rem;
+
+  .accommodation-header {
+    text-align: center;
+    padding: 8rem 2rem 6rem 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    background-image: url("/assets/home-videos/accommodation/hotel-1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--shadow-medium);
+      z-index: 1;
+    }
+
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 400;
+      color: #ffffff;
+      margin-bottom: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px var(--shadow-medium);
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 500;
+      @include brand-primary;
+      margin-bottom: 3rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 3px var(--shadow-medium);
+    }
+
+    .intro-text {
+      font-size: 1.2rem;
+      line-height: 1.9;
+      max-width: 1000px;
+      margin: 0 auto;
+      color: #ffffff;
+      opacity: 0.95;
+      font-weight: 400;
+      text-shadow: 1px 1px 3px var(--shadow-medium);
+      background: var(--shadow);
+      padding: 2rem 3rem;
+      border-radius: 8px;
+      backdrop-filter: blur(2px);
+    }
+  }
+
+  .accommodation-content {
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8rem;
+
+    section {
+      h2 {
+        font-size: 2rem;
+        font-weight: 400;
+        @include text-secondary;
+        text-align: center;
+        margin-bottom: 3.5rem;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: -15px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 60px;
+          height: 2px;
+          background: var(--brand-primary);
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -15px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 60px;
+          height: 2px;
+          background: var(--brand-primary);
+        }
+      }
+      
+      &.fitness-section {
+        margin-bottom: 4rem;
+      }
+    }
+
+    .hotel-showcase {
+      .images-grid {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 2rem;
+        height: 600px;
+        margin-bottom: 1rem;
+
+        .main-image,
+        .side-image {
+          position: relative;
+          border-radius: 4px;
+          overflow: hidden;
+          box-shadow: 0 4px 20px var(--shadow-medium);
+          @include theme-transition;
+          border: 1px solid var(--bg-tertiary);
+
+          &:hover {
+            box-shadow: 0 8px 30px var(--brand-accent-strong);
+            border-color: var(--brand-primary);
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            filter: brightness(0.9) contrast(1.1);
+
+            &:hover {
+              transform: scale(1.02);
+              filter: brightness(1) contrast(1.2);
+            }
+          }
+
+          .image-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            @include bg-secondary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+
+            .loading-spinner {
+              width: 35px;
+              height: 35px;
+              border: 2px solid var(--bg-tertiary);
+              border-top: 2px solid var(--brand-primary);
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+            }
+          }
+        }
+
+        .side-images {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+
+          .side-image {
+            flex: 1;
+          }
+        }
+      }
+    }
+
+    .dining-section,
+    .pool-section,
+    .spa-section,
+    .fitness-section {
+      .section-content {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        gap: 4rem;
+        align-items: start;
+        margin-top: 2rem;
+
+        .text-content {
+          padding-right: 1rem;
+          padding-bottom: 0.5rem;
+          p {
+            font-size: 1.4rem;
+            line-height: 1.9;
+            @include text-secondary;
+            opacity: 0.95;
+            text-align: left;
+            font-weight: 300;
+            margin-bottom: 0;
+          }
+        }
+
+        .dining-images,
+        .pool-images,
+        .spa-images,
+        .fitness-images {
+          .dining-grid,
+          .pool-grid,
+          .spa-grid,
+          .fitness-grid {
+            display: grid;
+            gap: 1.5rem;
+
+            .dining-image,
+            .pool-image,
+            .spa-image,
+            .fitness-image {
+              position: relative;
+              border-radius: 2px;
+              overflow: hidden;
+              box-shadow: 0 3px 15px var(--shadow);
+              @include theme-transition;
+              border: 1px solid var(--bg-tertiary);
+
+              &:hover {
+                box-shadow: 0 6px 25px var(--brand-accent-strong);
+                border-color: var(--brand-primary);
+                transform: translateY(-2px);
+              }
+
+              img {
+                width: 100%;
+                height: 220px;
+                object-fit: cover;
+                transition: all 0.4s ease;
+                filter: brightness(0.85) contrast(1.1);
+
+                &:hover {
+                  transform: scale(1.03);
+                  filter: brightness(0.95) contrast(1.2);
+                }
+              }
+
+              .image-placeholder {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 220px;
+                @include bg-secondary;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 2px;
+
+                .loading-spinner {
+                  width: 28px;
+                  height: 28px;
+                  border: 2px solid var(--bg-tertiary);
+                  border-top: 2px solid var(--brand-primary);
+                  border-radius: 50%;
+                  animation: spin 1s linear infinite;
+                }
+              }
+            }
+          }
+
+          .dining-grid {
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            max-height: 460px;
+
+            .dining-image.large {
+              grid-row: 1 / -1;
+
+              img,
+              .image-placeholder {
+                height: 100%;
+              }
+            }
+          }
+
+          .pool-grid,
+          .spa-grid {
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            max-height: 460px;
+
+            .pool-image.large,
+            .spa-image.large {
+              grid-row: 1 / -1;
+
+              img,
+              .image-placeholder {
+                height: 100%;
+              }
+            }
+          }
+          
+          .fitness-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            max-height: 460px;
+            justify-items: center;
+
+            .fitness-image.large {
+              width: 100%;
+              max-width: 600px;
+
+              img,
+              .image-placeholder {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+              }
+            }
+          }
+        }
+        
+        .dining-images,
+        .pool-images,
+        .spa-images,
+        .fitness-images {
+          width: 90%;
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Desktop large screens
+@media (min-width: 1441px) {
+  .accommodation-container {
+    .accommodation-header {
+      min-height: 80vh;
+
+      h1 {
+        font-size: 4rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      .intro-text {
+        font-size: 1.3rem;
+        max-width: 1200px;
+        padding: 2.5rem 3.5rem;
+      }
+    }
+
+    .accommodation-content {
+      max-width: 1600px;
+      gap: 10rem;
+
+      .hotel-showcase .images-grid {
+        height: 700px;
+        gap: 2.5rem;
+      }
+
+      .dining-section,
+      .pool-section,
+      .spa-section,
+      .fitness-section {
+        .section-content {
+          gap: 5rem;
+
+          .text-content p {
+            font-size: 1.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Laptop/tablet landscape
+@media (max-width: 1200px) {
+  .accommodation-container {
+    .accommodation-header {
+      padding: 6rem 1.5rem 5rem 1.5rem;
+      min-height: 65vh;
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        letter-spacing: 3px;
+      }
+
+      .intro-text {
+        font-size: 1.1rem;
+        max-width: 900px;
+        padding: 1.8rem 2.5rem;
+      }
+    }
+
+    .accommodation-content {
+      padding: 0 1.5rem;
+      gap: 7rem;
+
+      .hotel-showcase .images-grid {
+        height: 550px;
+        gap: 1.8rem;
+      }
+
+      .dining-section,
+      .pool-section,
+      .spa-section,
+      .fitness-section {
+        .section-content {
+          gap: 3.5rem;
+
+          .text-content p {
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Tablet portrait
+@media (max-width: 1024px) {
+  .accommodation-container {
+    .accommodation-header {
+      padding: 5rem 1rem 4rem 1rem;
+      min-height: 60vh;
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+        letter-spacing: 2.5px;
+      }
+
+      .intro-text {
+        font-size: 1rem;
+        max-width: 700px;
+        padding: 1.5rem 2rem;
+      }
+    }
+
+    .accommodation-content {
+      padding: 0 1.5rem;
+      gap: 6rem;
+
+      .hotel-showcase .images-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1.5rem;
+
+        .main-image {
+          height: 350px;
+        }
+
+        .side-images {
+          flex-direction: row;
+          gap: 1.5rem;
+
+          .side-image {
+            height: 250px;
+          }
+        }
+      }
+
+      .dining-section,
+      .pool-section,
+      .spa-section,
+      .fitness-section {
+        .section-content {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+          place-items: center;
+
+          .text-content {
+            padding-right: 0;
+            margin-bottom: 1rem;
+
+            p {
+              font-size: 1.2rem;
+              text-align: center;
+            }
+          }
+
+          .pool-images .pool-grid,
+          .spa-images .spa-grid,
+          .fitness-images .fitness-grid {
+            grid-template-columns: 1fr;
+            max-height: none;
+
+            .pool-image.large,
+            .spa-image.large,
+            .fitness-image.large {
+              grid-row: auto;
+              max-width: none;
+
+              img,
+              .image-placeholder {
+                height: 220px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Mobile landscape / small tablet
+@media (max-width: 768px) {
+  .accommodation-container {
+    padding-top: 1rem;
+
+    .accommodation-header {
+      padding: 4rem 1rem 3rem 1rem;
+      margin-bottom: 2rem;
+      min-height: 50vh;
+
+      h1 {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+      }
+
+      h2 {
+        font-size: 1rem;
+        letter-spacing: 2px;
+        margin-bottom: 2.5rem;
+      }
+
+      .intro-text {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        padding: 1.2rem 1.5rem;
+      }
+    }
+
+    .accommodation-content {
+      padding: 0 1rem;
+      gap: 5rem;
+
+      section {
+        h2 {
+          font-size: 1.7rem;
+          letter-spacing: 3px;
+          margin-bottom: 2.5rem;
+        }
+
+        &.pool-section {
+          margin-top: 11rem;
+        }
+      }
+
+      .hotel-showcase .images-grid {
+        .main-image {
+          height: 300px;
+        }
+
+        .side-images {
+          flex-direction: column;
+          gap: 1.5rem;
+
+          .side-image {
+            height: 220px;
+          }
+        }
+      }
+
+      .dining-section,
+      .pool-section,
+      .spa-section,
+      .fitness-section {
+        .section-content {
+          gap: 2.5rem;
+
+          .text-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+          }
+
+          .dining-images .dining-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+            gap: 1.2rem;
+
+            .dining-image.large {
+              grid-row: auto;
+
+              img,
+              .image-placeholder {
+                height: 220px;
+              }
+            }
+
+            .dining-image img {
+              height: 200px;
+            }
+          }
+
+          .pool-images .pool-grid,
+          .spa-images .spa-grid,
+          .fitness-images .fitness-grid {
+            gap: 1.2rem;
+            grid-template-columns: 1fr;
+            
+            .pool-image.large,
+            .spa-image.large,
+            .fitness-image.large {
+              max-width: none;
+            }
+
+            .pool-image img,
+            .spa-image img,
+            .fitness-image img,
+            .pool-image .image-placeholder,
+            .spa-image .image-placeholder,
+            .fitness-image .image-placeholder {
+              height: 200px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Mobile portrait
+@media (max-width: 480px) {
+  .accommodation-container {
+    .accommodation-header {
+      padding: 3rem 0.8rem 2.5rem 0.8rem;
+      margin-bottom: 1.5rem;
+      min-height: 45vh;
+
+      h1 {
+        font-size: 1.8rem;
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+      }
+
+      h2 {
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 2rem;
+      }
+
+      .intro-text {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        padding: 1rem 1.2rem;
+      }
+    }
+
+    .accommodation-content {
+      padding: 0 0.8rem;
+      gap: 4rem;
+
+      section {
+        h2 {
+          font-size: 1.4rem;
+          letter-spacing: 2px;
+          margin-bottom: 2rem;
+
+          &::before,
+          &::after {
+            width: 40px;
+          }
+        }
+      }
+
+      .hotel-showcase .images-grid {
+        gap: 1.2rem;
+
+        .main-image {
+          height: 250px;
+        }
+
+        .side-images {
+          gap: 1.2rem;
+
+          .side-image {
+            height: 180px;
+          }
+        }
+      }
+
+      .dining-section,
+      .pool-section,
+      .spa-section,
+      .fitness-section {
+        .section-content {
+          gap: 2rem;
+
+          .text-content p {
+            font-size: 1rem;
+            line-height: 1.7;
+          }
+
+          .dining-images .dining-grid,
+          .pool-images .pool-grid,
+          .spa-images .spa-grid,
+          .fitness-images .fitness-grid {
+            gap: 1rem;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+
+            .dining-image.large,
+            .pool-image.large,
+            .spa-image.large,
+            .fitness-image.large {
+              grid-row: auto;
+            }
+
+            .dining-image img,
+            .pool-image img,
+            .spa-image img,
+            .fitness-image img,
+            .dining-image .image-placeholder,
+            .pool-image .image-placeholder,
+            .spa-image .image-placeholder,
+            .fitness-image .image-placeholder {
+              height: 180px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Extra small mobile
+@media (max-width: 360px) {
+  .accommodation-container {
+    .accommodation-header {
+      padding: 2.5rem 0.5rem 2rem 0.5rem;
+      min-height: 40vh;
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        margin-bottom: 1.5rem;
+      }
+
+      .intro-text {
+        font-size: 0.8rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+
+    .accommodation-content {
+      padding: 0 0.5rem;
+      gap: 3rem;
+
+      section {
+        h2 {
+          font-size: 1.2rem;
+          letter-spacing: 1.5px;
+        }
+      }
+
+      .hotel-showcase .images-grid {
+        .main-image {
+          height: 220px;
+        }
+
+        .side-images .side-image {
+          height: 160px;
+        }
+      }
+
+      .dining-section,
+      .pool-section,
+      .spa-section,
+      .fitness-section {
+        .section-content {
+          .text-content p {
+            font-size: 0.95rem;
+          }
+
+          .dining-images .dining-grid,
+          .pool-images .pool-grid,
+          .spa-images .spa-grid,
+          .fitness-images .fitness-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+
+            .dining-image.large,
+            .pool-image.large,
+            .spa-image.large,
+            .fitness-image.large {
+              grid-row: auto;
+            }
+
+            .dining-image img,
+            .pool-image img,
+            .spa-image img,
+            .fitness-image img,
+            .dining-image .image-placeholder,
+            .pool-image .image-placeholder,
+            .spa-image .image-placeholder,
+            .fitness-image .image-placeholder {
+              height: 160px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

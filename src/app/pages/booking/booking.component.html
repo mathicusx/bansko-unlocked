@@ -1,0 +1,186 @@
+<div class="booking-container">
+  <div class="booking-tours-section">
+    <div class="booking-header">
+      <h1 *ngIf="isOwnRoute">{{ copy.heading }}</h1>
+      <h2 *ngIf="!isOwnRoute">{{ copy.heading }}</h2>
+      <p>{{ copy.intro }}</p>
+
+      <!-- Quota-gated social-proof + season-filling pills. Each renders only
+           when the backend says the count is above threshold (the getter
+           returns null otherwise), so we never show a weak "1 booked" line.
+           Visible both at /enduro-tours and on the homepage embed. -->
+      <div
+        class="social-proof social-proof--centered"
+        *ngIf="socialProofText || seasonFillingText">
+        <p *ngIf="socialProofText" class="social-proof__line social-proof__line--count">
+          <mat-icon>groups</mat-icon>
+          <span>{{ socialProofText }}</span>
+        </p>
+        <p *ngIf="seasonFillingText" class="social-proof__line social-proof__line--season">
+          <mat-icon>local_fire_department</mat-icon>
+          <span>{{ seasonFillingText }}</span>
+        </p>
+      </div>
+
+      <p class="popular-label" *ngIf="!isOwnRoute">
+        <mat-icon>star</mat-icon>
+        <span>{{ copy.mostPopular }}</span>
+      </p>
+      <button *ngIf="isAdmin" mat-raised-button color="accent" class="admin-add-btn" (click)="addTour()">
+        <mat-icon>add</mat-icon>
+        {{ copy.admin.addNew }}
+      </button>
+    </div>
+
+    <div class="loading-container" *ngIf="loading">
+      <div class="spinner"></div>
+      <span class="loading-text">{{ copy.loading }}</span>
+    </div>
+
+    <div class="tours-grid" *ngIf="!loading">
+    <mat-card
+      *ngFor="let tour of displayTours"
+      class="tour-card"
+      [class.tour-card-draft]="isAdmin && tour.published === false"
+      (click)="selectTour(tour)"
+    >
+      <div class="card-draft-badge" *ngIf="isAdmin && tour.published === false">DRAFT</div>
+      <div class="tour-image-container">
+        <img
+          [src]="tour.image | optimize:800"
+          [srcset]="tour.image | srcset:[400, 800, 1200]"
+          sizes="(max-width: 600px) 90vw, (max-width: 1200px) 50vw, 33vw"
+          [alt]="tour.title"
+          class="tour-image"
+          loading="lazy"
+          decoding="async" />
+        <div class="tour-overlay">
+          <div class="difficulty-badges">
+            <div
+              *ngFor="let difficulty of tour.difficulty"
+              class="difficulty-badge"
+              [style.background-color]="getDifficultyColor(difficulty)"
+            >
+              {{ translateDifficulty(difficulty) }}
+            </div>
+          </div>
+          <div class="duration-badge">
+            <mat-icon>schedule</mat-icon>
+            {{ tour.duration }}
+          </div>
+        </div>
+      </div>
+      
+      <mat-card-content class="tour-content">
+        <h2>{{ tour.title }}</h2>
+        <h3>{{ tour.promo }}</h3>
+        <p class="tour-description">{{ tour.description }}</p>
+        
+        <div class="tour-details">
+        </div>
+        
+        <div class="pricing-section">
+          <!-- Promo Badge -->
+          <div class="promo-info" *ngIf="hasActivePromo(tour)">
+            <mat-icon>local_offer</mat-icon>
+            <span>{{ copy.specialOffer }}</span>
+            <span class="promo-separator">•</span>
+            <mat-icon>schedule</mat-icon>
+            <span>{{ promoLabel(tour, tour.promoEndDate | date:'d MMM y') }}</span>
+          </div>
+
+          <div class="price-options" [class.price-options--single]="!showGbp">
+            <div class="price-option">
+              <span class="currency">EUR</span>
+              <div class="price-wrapper" *ngIf="hasActivePromo(tour) && tour.promoPriceEur">
+                <span class="old-price">€{{ tour.priceEur }}</span>
+                <span class="price promo-price">€{{ tour.promoPriceEur }}</span>
+              </div>
+              <span class="price" *ngIf="!hasActivePromo(tour) || !tour.promoPriceEur">€{{ tour.priceEur }}</span>
+            </div>
+            <ng-container *ngIf="showGbp">
+              <div class="price-divider">{{ copy.priceDivider }}</div>
+              <div class="price-option">
+                <span class="currency">GBP</span>
+                <div class="price-wrapper" *ngIf="hasActivePromo(tour) && tour.promoPriceGbp">
+                  <span class="old-price">£{{ tour.priceGbp }}</span>
+                  <span class="price promo-price">£{{ tour.promoPriceGbp }}</span>
+                </div>
+                <span class="price" *ngIf="!hasActivePromo(tour) || !tour.promoPriceGbp">£{{ tour.priceGbp }}</span>
+              </div>
+            </ng-container>
+          </div>
+          <div class="per-person">{{ copy.perUnit }}</div>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="view-details-btn"
+          (click)="viewTourDetails(tour, $event)"
+        >
+          <mat-icon>visibility</mat-icon>
+          {{ copy.viewDetails }}
+        </button>
+
+        <div class="admin-actions" *ngIf="isAdmin">
+          <button mat-raised-button color="accent" (click)="editTour(tour, $event)">
+            <mat-icon>edit</mat-icon>
+            {{ copy.admin.edit }}
+          </button>
+          <button mat-raised-button color="warn" (click)="deleteTour(tour, $event)">
+            <mat-icon>delete</mat-icon>
+            {{ copy.admin.delete }}
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    </div>
+
+    <div class="view-all-cta" *ngIf="!isOwnRoute && !loading && tours.length > displayTours.length">
+      <button mat-raised-button color="primary" class="view-all-btn" (click)="viewAllTours()">
+        <span>{{ copy.viewAll }}</span>
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <div class="booking-info" *ngIf="isOwnRoute">
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>{{ copy.whatsIncluded }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="included-grid">
+          <!-- Icons stay fixed; only the text rotates by locale. The 6 icons
+               below map 1:1 to copy.includedItems[0..5] — adding or removing
+               items requires syncing both the icon list and the dictionary. -->
+          <div class="included-item">
+            <mat-icon>motorcycle</mat-icon>
+            <span>{{ copy.includedItems[0].text }}</span>
+          </div>
+          <div class="included-item">
+            <mat-icon>security</mat-icon>
+            <span>{{ copy.includedItems[1].text }}</span>
+          </div>
+          <div class="included-item">
+            <mat-icon>hotel</mat-icon>
+            <span>{{ copy.includedItems[2].text }}</span>
+          </div>
+          <div class="included-item">
+            <mat-icon>restaurant</mat-icon>
+            <span>{{ copy.includedItems[3].text }}</span>
+          </div>
+          <div class="included-item">
+            <mat-icon>support_agent</mat-icon>
+            <span>{{ copy.includedItems[4].text }}</span>
+          </div>
+          <div class="included-item">
+            <mat-icon>local_shipping</mat-icon>
+            <span>{{ copy.includedItems[5].text }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    </div>
+  </div>
+</div>

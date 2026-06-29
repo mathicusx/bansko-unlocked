@@ -1,0 +1,24 @@
+<div class="countdown-timer" [class.compact]="compact" [class.expired]="timeRemaining.expired">
+  <div class="timer-label">{{ copy.label }}</div>
+  <div class="timer-display" *ngIf="!timeRemaining.expired">
+    <div class="time-unit" *ngIf="timeRemaining.days > 0">
+      <span class="time-value">{{ timeRemaining.days }}</span>
+      <span class="time-label">{{ timeRemaining.days === 1 ? copy.day : copy.days }}</span>
+    </div>
+    <div class="time-unit" *ngIf="timeRemaining.days > 0 || timeRemaining.hours > 0">
+      <span class="time-value">{{ timeRemaining.hours }}</span>
+      <span class="time-label">{{ timeRemaining.hours === 1 ? copy.hr : copy.hrs }}</span>
+    </div>
+    <div class="time-unit">
+      <span class="time-value">{{ timeRemaining.minutes }}</span>
+      <span class="time-label">{{ copy.min }}</span>
+    </div>
+    <div class="time-unit">
+      <span class="time-value">{{ timeRemaining.seconds }}</span>
+      <span class="time-label">{{ copy.sec }}</span>
+    </div>
+  </div>
+  <div class="timer-expired" *ngIf="timeRemaining.expired">
+    <span>{{ copy.ended }}</span>
+  </div>
+</div>

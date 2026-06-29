@@ -1,0 +1,84 @@
+@import '../../styles/mixins';
+
+.feedback-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200; // above the floating-help bubble (1000) and checkout (1100)
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.feedback-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  @include themed-card(2rem);
+}
+
+.feedback-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  @include text-secondary;
+  display: flex;
+  padding: 0.25rem;
+  border-radius: 50%;
+
+  &:hover {
+    color: var(--brand-primary);
+  }
+}
+
+.feedback-body {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.feedback-icon {
+  color: #22c55e;
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+
+  &.is-error {
+    color: var(--brand-primary);
+  }
+}
+
+.feedback-title {
+  color: var(--brand-primary);
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.feedback-message {
+  @include text-secondary;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.feedback-primary {
+  @include themed-button(primary);
+  // Brand-red in both themes, so force white text (themed-button(primary) uses
+  // --text-inverse which flips dark in dark mode — the documented trap).
+  color: #ffffff;
+  min-width: 140px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.9rem 1.5rem;
+
+  &:hover {
+    color: #ffffff;
+  }
+}

@@ -1,0 +1,17 @@
+# Cloudflare Pages headers.
+#
+# Hashed JS/CSS bundles and content-addressed assets can be cached for a year.
+# The HTML shell is intentionally not cached long — it points at the latest
+# bundles and the SEO meta can change.
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable

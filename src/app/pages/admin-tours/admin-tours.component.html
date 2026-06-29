@@ -1,0 +1,297 @@
+<mat-toolbar color="primary" class="admin-toolbar">
+  <span>Tour Management</span>
+  <span class="spacer"></span>
+  <button mat-button (click)="goToBookings()">
+    <mat-icon>receipt_long</mat-icon>
+    Bookings
+  </button>
+  <button mat-raised-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Logout
+  </button>
+</mat-toolbar>
+
+<div class="admin-container">
+  <mat-card class="info-card">
+    <mat-card-content>
+      <div class="info-header">
+        <mat-icon>info</mat-icon>
+        <h3>Quick Guide</h3>
+      </div>
+      <ul class="info-list">
+        <li><strong>Images:</strong> Use existing paths like <code>assets/enduro-gallery/enduro-1.jpg</code> (enduro-1 to enduro-52)</li>
+        <li><strong>Edit:</strong> Open a tour, make changes, and click "Save Tour"</li>
+        <li><strong>Add:</strong> Use the "Add New Tour" button below</li>
+      </ul>
+      <button mat-raised-button color="accent" (click)="addNewTour()" style="margin-top: 12px;">
+        <mat-icon>add</mat-icon>
+        Add New Tour
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+
+  <form [formGroup]="toursForm">
+    <div formArrayName="tours">
+      <mat-accordion multi>
+        <mat-expansion-panel
+          *ngFor="let tour of tours.controls; let i = index"
+          class="tour-panel"
+        >
+          <mat-expansion-panel-header
+            [class.draft-panel-header]="!tour.get('published')?.value"
+          >
+            <mat-panel-title>
+              <mat-icon>explore</mat-icon>
+              {{ tour.get('title')?.value || 'New Tour' }}
+              <span class="draft-badge" *ngIf="!tour.get('published')?.value">DRAFT</span>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ tour.get('duration')?.value }} - €{{
+                tour.get('priceEur')?.value
+              }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div [formGroupName]="i" class="tour-form">
+            <!-- Basic Info Section -->
+            <div class="form-section">
+              <h3>Basic Information</h3>
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Tour ID</mat-label>
+                  <input matInput formControlName="id" readonly />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="quarter-width">
+                  <mat-label>Title</mat-label>
+                  <input matInput formControlName="title" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="quarter-width">
+                  <mat-label>Type</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option value="enduro">Enduro</mat-option>
+                    <mat-option value="buggy">Buggy</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>URL slug (e.g. weekend-wheels-adventure)</mat-label>
+                <input matInput formControlName="slug" />
+                <mat-hint>Public URL: /tour/&lt;slug&gt;. Leave blank on create to auto-generate from title. Changing this on an existing tour breaks any indexed URL — only do it deliberately.</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Promo Text (Optional)</mat-label>
+                <input matInput formControlName="promo" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea
+                  matInput
+                  formControlName="description"
+                  rows="3"
+                ></textarea>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Main Image URL</mat-label>
+                <input matInput formControlName="image" />
+                <mat-hint>Use existing: assets/enduro-gallery/enduro-X.jpg (X = 1-52) or add new images</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <!-- Pricing & Duration Section -->
+            <div class="form-section">
+              <h3>Pricing & Duration</h3>
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Price (EUR)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="priceEur"
+                  />
+                  <span matPrefix>€&nbsp;</span>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Price (GBP)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="priceGbp"
+                  />
+                  <span matPrefix>£&nbsp;</span>
+                </mat-form-field>
+              </div>
+
+              <h4 class="promo-section-header">
+                <mat-icon>local_offer</mat-icon>
+                Promotional Pricing (Optional)
+              </h4>
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Promo Price (EUR)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="promoPriceEur"
+                  />
+                  <span matPrefix>€&nbsp;</span>
+                  <mat-hint>Leave empty for no promo</mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Promo Price (GBP)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="promoPriceGbp"
+                  />
+                  <span matPrefix>£&nbsp;</span>
+                  <mat-hint>Leave empty for no promo</mat-hint>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Promo End Date</mat-label>
+                <input
+                  matInput
+                  type="datetime-local"
+                  formControlName="promoEndDate"
+                />
+                <mat-hint>When the promotional pricing expires (e.g., 2026-02-01T23:59)</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Promo Booking Period (label)</mat-label>
+                <input matInput formControlName="promoBookingPeriod" />
+                <mat-hint>Free-text label, e.g. "July" or "July–August". Shown on the badge as "Valid for [value] bookings".</mat-hint>
+              </mat-form-field>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Duration</mat-label>
+                  <input matInput formControlName="duration" />
+                  <mat-hint>e.g., "4 Days"</mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Duration Details</mat-label>
+                  <input matInput formControlName="durationDetails" />
+                  <mat-hint>e.g., "4 days (3 nights)..."</mat-hint>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Average Distance</mat-label>
+                <input matInput formControlName="averageDistance" />
+                <mat-hint>e.g., "60-120km per day"</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Difficulty Levels (comma-separated)</mat-label>
+                <input matInput formControlName="difficulty" />
+                <mat-hint>e.g., "Beginner, Advanced, Pro"</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <!-- Tour Days Section -->
+            <div class="form-section">
+              <h3>Tour Itinerary</h3>
+
+              <div formArrayName="tourDetails">
+                <mat-card
+                  *ngFor="let day of getTourDays(i).controls; let j = index"
+                  class="day-card"
+                  [formGroupName]="j"
+                >
+                  <div class="day-header">
+                    <h4>Day {{ day.get('day')?.value }}</h4>
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      type="button"
+                      (click)="removeTourDay(i, j)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Day Title</mat-label>
+                    <input matInput formControlName="title" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea
+                      matInput
+                      formControlName="description"
+                      rows="3"
+                    ></textarea>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Image URL</mat-label>
+                    <input matInput formControlName="image" />
+                    <mat-hint>Example: assets/enduro-gallery/enduro-5.jpg</mat-hint>
+                  </mat-form-field>
+                </mat-card>
+              </div>
+
+              <div class="add-day-button-container">
+                <button
+                  mat-raised-button
+                  color="accent"
+                  type="button"
+                  (click)="addTourDay(i)"
+                >
+                  <mat-icon>add</mat-icon>
+                  Add Day to Itinerary
+                </button>
+              </div>
+            </div>
+
+            <!-- Visibility -->
+            <div class="form-section visibility-section">
+              <h3>Visibility</h3>
+              <mat-slide-toggle formControlName="published" color="primary">
+                <strong>Published</strong>
+                <span class="visibility-hint">
+                  When off, this tour is a draft — hidden from the public site and the sitemap. Turn on once the content is ready.
+                </span>
+              </mat-slide-toggle>
+            </div>
+
+            <!-- Tour Actions -->
+            <div class="single-tour-actions bottom-action">
+              <button
+                mat-raised-button
+                color="primary"
+                type="button"
+                (click)="saveTour(i)"
+              >
+                <mat-icon>save</mat-icon>
+                Save Tour
+              </button>
+              <button
+                mat-raised-button
+                color="warn"
+                type="button"
+                (click)="deleteTour(i)"
+              >
+                <mat-icon>delete</mat-icon>
+                Delete Tour
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+</div>

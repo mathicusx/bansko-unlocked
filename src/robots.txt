@@ -1,0 +1,85 @@
+# Robots.txt for Enduro Brothers Bulgaria — Premium Motorcycle & Buggy Tours, Bansko
+# Last updated: 2026-05-22
+
+# ---- Default policy: allow everything that isn't admin / private ----
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /.git/
+# Block search-crawlable URLs that would waste crawl budget
+Disallow: /*?utm_*
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+Disallow: /*?_branch_match_id=
+
+# ---- Per-bot fine-tuning ----
+User-agent: Googlebot
+Allow: /
+Allow: /assets/
+Disallow: /admin/
+Crawl-delay: 0
+
+User-agent: Googlebot-Image
+Allow: /assets/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Crawl-delay: 1
+
+User-agent: Yandex
+Allow: /
+Disallow: /admin/
+Crawl-delay: 2
+
+# Social previews (don't block — needed for OG / Twitter cards)
+User-agent: facebookexternalhit
+Allow: /
+User-agent: Facebot
+Allow: /
+User-agent: Twitterbot
+Allow: /
+User-agent: LinkedInBot
+Allow: /
+User-agent: Pinterestbot
+Allow: /
+User-agent: WhatsApp
+Allow: /
+
+# Travel-aggregator crawlers
+User-agent: TripAdvisor
+Allow: /
+
+# AI search citation bots — allow so we surface in AI Overviews,
+# ChatGPT Search, Perplexity, Gemini, and Claude.
+# Training crawlers:
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+User-agent: CCBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+# Live-citation / on-demand fetch bots (power answer citations & user lookups):
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+
+# Sitemap
+Sitemap: https://banskounlocked.com/sitemap.xml

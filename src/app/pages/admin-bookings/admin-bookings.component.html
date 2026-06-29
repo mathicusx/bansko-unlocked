@@ -1,0 +1,269 @@
+<mat-toolbar color="primary" class="admin-toolbar">
+  <mat-icon>receipt_long</mat-icon>
+  <span class="title">Bookings — Admin</span>
+  <span class="spacer"></span>
+  <button mat-button (click)="goToTours()">
+    <mat-icon>motorcycle</mat-icon>
+    Tours
+  </button>
+  <button mat-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Log out
+  </button>
+</mat-toolbar>
+
+<div class="admin-content">
+  <!-- Commission summary -->
+  <section class="panel summary-card">
+    <header class="panel__head">
+      <div>
+        <h2 class="panel__title">Commission summary</h2>
+        <p class="panel__subtitle">
+          Completed bookings between
+          <strong>{{ rangeFrom || '—' }}</strong> and
+          <strong>{{ rangeTo || '—' }}</strong>
+          — AI&nbsp;+&nbsp;organic only count toward the deal
+        </p>
+      </div>
+    </header>
+
+    <div class="summary-controls">
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>From</mat-label>
+        <input matInput type="date" [(ngModel)]="rangeFrom" (change)="loadSummary()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>To</mat-label>
+        <input matInput type="date" [(ngModel)]="rangeTo" (change)="loadSummary()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="rate-field">
+        <mat-label>Rate</mat-label>
+        <input
+          matInput
+          type="number"
+          step="0.005"
+          min="0"
+          max="1"
+          [(ngModel)]="commissionRate"
+          (change)="loadSummary()"
+        />
+        <span matSuffix>&nbsp;({{ (commissionRate * 100).toFixed(2) }}%)</span>
+      </mat-form-field>
+      <button mat-flat-button color="primary" class="refresh-btn" (click)="loadSummary()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+
+    <div class="kpi-grid" *ngIf="summary && !summaryLoading">
+      <div class="kpi">
+        <mat-icon class="kpi__icon">flag</mat-icon>
+        <div class="kpi__label">Completed tours</div>
+        <div class="kpi__value">{{ summary.completedCount }}</div>
+      </div>
+      <div class="kpi">
+        <mat-icon class="kpi__icon">payments</mat-icon>
+        <div class="kpi__label">Total completed revenue</div>
+        <div class="kpi__value">{{ formatMoney(summary.totalCompletedRevenue) }}</div>
+      </div>
+      <div class="kpi kpi--accent">
+        <mat-icon class="kpi__icon">smart_toy</mat-icon>
+        <div class="kpi__label">Attributable revenue (AI + organic)</div>
+        <div class="kpi__value">{{ formatMoney(summary.attributableRevenue) }}</div>
+        <div class="kpi__note">{{ summary.attributableCount }} bookings</div>
+      </div>
+      <div class="kpi kpi--commission">
+        <mat-icon class="kpi__icon">savings</mat-icon>
+        <div class="kpi__label">Commission owed &#64; {{ (summary.rate * 100).toFixed(2) }}%</div>
+        <div class="kpi__value">{{ formatMoney(summary.commissionOwed) }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="summaryLoading" class="state-row">Loading summary…</div>
+
+    <ng-container *ngIf="summary && summary.byChannel.length">
+      <h3 class="channels-heading">By channel</h3>
+      <div class="channels-table-scroll">
+        <table class="channels-table">
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>Bookings</th>
+              <th>Revenue</th>
+              <th>Commission</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of summary.byChannel">
+              <td>
+                <span
+                  class="channel-pill"
+                  [style.background-color]="channelBadgeColour(row.channel)"
+                >
+                  {{ row.channel }}
+                </span>
+                <span
+                  *ngIf="isCommissionable(row.channel)"
+                  class="commissionable-flag"
+                  matTooltip="Counts toward commission"
+                >
+                  <mat-icon inline>star</mat-icon>
+                </span>
+              </td>
+              <td>{{ row.count }}</td>
+              <td>{{ formatMoney(row.revenue) }}</td>
+              <td>
+                <strong *ngIf="row.commission > 0">{{ formatMoney(row.commission) }}</strong>
+                <span *ngIf="row.commission === 0" class="muted">—</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </section>
+
+  <!-- Filters -->
+  <section class="panel filters-card">
+    <div class="filters-row">
+      <mat-form-field appearance="outline" class="search-field" floatLabel="always">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          placeholder="Name, email, tour, channel"
+          [(ngModel)]="searchText"
+          (ngModelChange)="applyFilters()"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()" panelClass="admin-select-panel">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let s of statusOptions" [value]="s.value">
+            {{ s.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Channel</mat-label>
+        <mat-select [(ngModel)]="channelFilter" (selectionChange)="applyFilters()" panelClass="admin-select-panel">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let c of availableChannels" [value]="c">{{ c }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <span class="filters-count" *ngIf="!loading">
+        {{ filtered.length }} of {{ bookings.length }}
+      </span>
+
+      <span class="spacer"></span>
+
+      <button mat-stroked-button class="reload-btn" (click)="loadBookings()">
+        <mat-icon>refresh</mat-icon>
+        Reload
+      </button>
+    </div>
+  </section>
+
+  <!-- Bookings list -->
+  <section class="panel bookings-card">
+    <div *ngIf="loading" class="state-row">Loading bookings…</div>
+
+    <div *ngIf="!loading && filtered.length === 0" class="state-row">
+      No bookings match the current filters.
+    </div>
+
+    <div class="bookings-scroll" *ngIf="!loading && filtered.length > 0">
+      <div class="bookings-grid">
+        <!-- Column header (desktop only) -->
+        <div class="bookings-grid__head">
+          <span>Booked</span>
+          <span>Customer</span>
+          <span>Tour</span>
+          <span>Riders</span>
+          <span>Deposit</span>
+          <span>Channel</span>
+          <span>Status</span>
+          <span>Action</span>
+        </div>
+
+        <article class="booking-row" *ngFor="let b of filtered">
+          <div class="cell cell--booked" data-label="Booked">
+            {{ b.createdAt | date: 'd MMM y, HH:mm' }}
+          </div>
+
+          <div class="cell cell--customer" data-label="Customer">
+            <div class="customer-name">{{ b.customerName }}</div>
+            <a class="customer-meta" [href]="'mailto:' + b.customerEmail">{{ b.customerEmail }}</a>
+            <div class="customer-meta">{{ b.customerPhone }}</div>
+          </div>
+
+          <div class="cell cell--tour" data-label="Tour">
+            <div class="tour-title">{{ b.tourTitle }}</div>
+            <div class="tour-meta" *ngIf="b.preferredDates">
+              <mat-icon inline>schedule</mat-icon>
+              {{ b.preferredDates }}
+            </div>
+          </div>
+
+          <div class="cell cell--riders" data-label="Riders">
+            <strong>{{ b.numberOfRiders }}</strong>
+            <div class="riders-meta">{{ b.experienceLevels.join(', ') }}</div>
+          </div>
+
+          <div class="cell cell--deposit" data-label="Deposit">
+            {{ formatMoney(b.depositAmount, b.currency) }}
+          </div>
+
+          <div class="cell cell--channel" data-label="Channel">
+            <span
+              class="channel-pill"
+              [style.background-color]="channelBadgeColour(b.attributionChannel)"
+              [matTooltip]="
+                'Source: ' + (b.attributionSource || '—') +
+                '\nReferrer: ' + (b.attributionReferrer || '—') +
+                '\nLanding: ' + (b.attributionLandingPath || '—') +
+                '\nCampaign: ' + (b.attributionCampaign || '—')
+              "
+            >
+              {{ b.attributionChannel || '(none)' }}
+            </span>
+            <mat-icon
+              *ngIf="isCommissionable(b.attributionChannel)"
+              inline
+              class="commissionable-flag"
+              matTooltip="Counts toward commission"
+            >
+              star
+            </mat-icon>
+          </div>
+
+          <div class="cell cell--status" data-label="Status">
+            <span class="status-pill" [style.background-color]="statusColour(b.status)">
+              {{ b.status }}
+            </span>
+            <div class="status-meta" *ngIf="b.tourCompletedAt">
+              Completed {{ b.tourCompletedAt | date: 'd MMM y' }}
+            </div>
+            <div class="status-meta" *ngIf="b.cancelledAt">
+              Cancelled {{ b.cancelledAt | date: 'd MMM y' }}
+            </div>
+          </div>
+
+          <div class="cell cell--actions" data-label="Set status">
+            <mat-form-field appearance="outline" class="status-select">
+              <mat-select [value]="b.status" (selectionChange)="setStatus(b, $event.value)" panelClass="admin-select-panel">
+                <mat-option *ngFor="let s of statusOptions" [value]="s.value">
+                  {{ s.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</div>

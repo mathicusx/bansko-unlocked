@@ -1,0 +1,11 @@
+{
+  "name": "image-compressor",
+  "version": "1.0.0",
+  "description": "Compress gallery images",
+  "scripts": {
+    "compress": "node compress-images.js"
+  },
+  "dependencies": {
+    "sharp": "^0.32.0"
+  }
+}

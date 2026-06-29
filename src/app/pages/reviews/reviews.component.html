@@ -1,0 +1,86 @@
+<div class="reviews-container">
+  <div class="section-header">
+    <h2>{{ copy.heading }}</h2>
+    <p>{{ copy.intro }}</p>
+  </div>
+
+  <p class="reviews-empty" *ngIf="!reviews.length">
+    Reviews from our guests will appear here soon. Been on an adventure with us?
+    <a routerLink="/contact">Get in touch</a> and tell us how it went.
+  </p>
+
+  <div class="carousel-wrapper" *ngIf="reviews.length">
+    <button class="nav-btn hide-mobile" (click)="scrollByCard(-1)" [attr.aria-label]="copy.previousAria">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="carousel-clip">
+    <div class="carousel-track" #carouselTrack
+         (touchstart)="onTouchStart($event)"
+         (touchend)="onTouchEnd($event)">
+      <div class="review-card" *ngFor="let review of reviews; let i = index">
+        <div class="review-header">
+          <div class="reviewer-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="reviewer-info">
+            <h4>{{ review.name }}</h4>
+            <span class="review-date">{{ review.date }}</span>
+          </div>
+          <div class="verified-chip" [attr.aria-label]="review.location">
+            <mat-icon>verified</mat-icon>
+            <span>{{ review.location }}</span>
+          </div>
+        </div>
+
+        <div class="star-rating">
+          <mat-icon *ngFor="let star of getStarArray(review.rating)">star</mat-icon>
+        </div>
+
+        <p class="review-text"
+           [class.clamped]="needsClamp(review) && !isExpanded(i)">{{ review.text }}</p>
+        <button *ngIf="needsClamp(review)"
+                class="read-toggle"
+                type="button"
+                (click)="toggleExpand(i)">
+          {{ isExpanded(i) ? copy.readLess : copy.readMore }}
+        </button>
+      </div>
+    </div>
+    </div>
+
+    <button class="nav-btn hide-mobile" (click)="scrollByCard(1)" [attr.aria-label]="copy.nextAria">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <p class="swipe-hint" *ngIf="reviews.length">{{ copy.swipeHint }}</p>
+
+  <div class="more-reviews" *ngIf="reviews.length">
+    <p>{{ copy.moreReviewsPrompt }}</p>
+    <div class="review-cta-buttons">
+      <a
+        href="https://www.google.com/search?q=Enduro+Brothers+Bulgaria&kgmid=/g/11sbt3hj5r&tbm=lcl"
+        target="_blank"
+        rel="noopener noreferrer"
+        mat-raised-button
+        color="primary"
+        class="google-link"
+      >
+        <mat-icon>star_rate</mat-icon>
+        {{ copy.googleCta }}
+      </a>
+      <a
+        href="https://www.facebook.com/profile.php?id=100089495893811&sk=reviews"
+        target="_blank"
+        rel="noopener noreferrer"
+        mat-raised-button
+        color="primary"
+        class="facebook-link"
+      >
+        <mat-icon>open_in_new</mat-icon>
+        {{ copy.facebookCta }}
+      </a>
+    </div>
+  </div>
+</div>

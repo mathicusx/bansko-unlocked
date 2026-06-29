@@ -1,0 +1,25 @@
+# Local-dev only — spins up Postgres for the NestJS server in `server/`.
+# The host port is intentionally NOT 5432 to avoid clashing with a system
+# Postgres install (which was hijacking auth in earlier testing). If you
+# change the port here, update DATABASE_URL in `server/.env` to match.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: enduro-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: enduro
+    ports:
+      - "55432:5432"
+    volumes:
+      - enduro-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d enduro"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  enduro-pg-data:

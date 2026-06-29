@@ -1,0 +1,622 @@
+@import "../../shared/styles/mixins";
+
+.booking-container {
+  min-height: 100vh;
+  @include theme-transition;
+}
+
+.booking-tours-section {
+  background-color: var(--bg-primary);
+  border-radius: 16px;
+  @include theme-transition;
+
+  @media (min-width: 769px) {
+    padding: 2rem;
+  }
+}
+
+.booking-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  .new-tour-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b35, #f7c948);
+    color: white;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 0.4rem 1.5rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    animation: badgePulse 2s ease-in-out infinite;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+  }
+
+  h1,
+  h2 {
+    font-weight: 800;
+    color: var(--brand-primary);
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px var(--brand-accent-strong);
+  }
+
+  h1 {
+    font-size: 3rem;
+
+    @media (max-width: 768px) {
+      font-size: 2.2rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.8rem;
+    }
+  }
+
+  h2 {
+    font-size: 2.4rem;
+
+    @media (max-width: 768px) {
+      font-size: 1.9rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.6rem;
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    @include text-secondary;
+    font-weight: 300;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+  }
+}
+
+.tours-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 1em;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.tour-card {
+  @include themed-card;
+  border-radius: 4px;
+  border-top: 3px solid var(--brand-primary);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: var(--brand-primary);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px var(--brand-accent-strong);
+  }
+}
+
+.tour-image-container {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+
+  @media (max-width: 480px) {
+    height: 200px;
+  }
+
+  .tour-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .tour-card:hover .tour-image {
+    transform: scale(1.05);
+  }
+
+  .tour-overlay {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 2;
+  }
+
+  .difficulty-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+
+    @media (max-width: 480px) {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  .duration-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+
+    mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+
+      mat-icon {
+        font-size: 0.9rem;
+        width: 0.9rem;
+        height: 0.9rem;
+      }
+    }
+  }
+}
+
+.tour-content {
+  padding: 1.5rem;
+  @include text-primary;
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(
+      135deg,
+      var(--brand-primary),
+      var(--brand-secondary)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 0.5rem;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        var(--brand-primary),
+        var(--brand-secondary)
+      );
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.4rem;
+      letter-spacing: 0.3px;
+
+      &::after {
+        width: 40px;
+        height: 2px;
+      }
+    }
+  }
+
+  .tour-card:hover h2::after {
+    width: 80px;
+
+    @media (max-width: 480px) {
+      width: 60px;
+    }
+  }
+
+  .tour-description {
+    @include text-secondary;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 480px) {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.tour-details {
+  margin-bottom: 1.5rem;
+}
+
+.pricing-section {
+  background: var(--brand-accent);
+  border: 1px solid var(--brand-accent-strong);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  @include theme-transition;
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .promo-info {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.5rem;
+    row-gap: 0.25rem;
+    background: #15803d; // AA-safe green for white text (was the `green` keyword)
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 1.2;
+    span {
+      white-space: nowrap;
+    }
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .promo-separator {
+      margin: 0 0.25rem;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.9rem;
+    }
+  }
+
+  .price-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    // Single-currency mode (non-EN locales: GBP hidden, EUR-only). Centre the
+    // lone .price-option instead of stranding it at flex-start.
+    &--single {
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .price-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+
+      .currency {
+        font-size: 0.9rem;
+        @include accent-readable;
+        font-weight: 600;
+      }
+
+      .price-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .old-price {
+        font-size: 1.1rem;
+        font-weight: 600;
+        @include text-secondary;
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+
+      .price {
+        font-size: 1.8rem;
+        font-weight: 800;
+        @include text-primary;
+
+        &.promo-price {
+          font-size: 2rem;
+          color: #22c55e;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .price-divider {
+      @include text-secondary;
+      font-style: italic;
+      font-size: 0.9rem;
+
+      @media (max-width: 480px) {
+        display: none;
+      }
+    }
+  }
+
+  .per-person {
+    text-align: center;
+    @include text-secondary;
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+}
+
+.view-details-btn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  @include brand-bg-primary;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  @include theme-transition;
+
+  &:hover:not(:disabled) {
+    background-color: var(--brand-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--brand-accent-strong);
+  }
+
+  mat-icon {
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+    width: auto;
+    height: auto;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+.booking-info {
+  margin-top: 3rem;
+
+  .info-card {
+    @include themed-card;
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+
+    mat-card-header {
+      mat-card-title {
+        @include text-primary;
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+
+        @media (max-width: 768px) {
+          font-size: 1.6rem;
+        }
+      }
+    }
+
+    mat-card-content {
+      padding: 2rem;
+
+      @media (max-width: 768px) {
+        padding: 1.5rem;
+      }
+
+      @media (max-width: 480px) {
+        padding: 1rem;
+      }
+    }
+  }
+}
+
+.included-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
+  .included-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      transform: translateY(-2px);
+    }
+
+    mat-icon {
+      color: #22c55e;
+      font-size: 1.3rem;
+      width: 1.3rem;
+      height: 1.3rem;
+      flex-shrink: 0;
+
+      @media (max-width: 480px) {
+        font-size: 1.1rem;
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+    }
+
+    span {
+      @include text-primary;
+      font-weight: 500;
+      font-size: 0.95rem;
+
+      @media (max-width: 480px) {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.included-tagline {
+  margin-top: 1rem;
+  font-style: italic;
+  @include text-secondary;
+  font-size: 0.9rem;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.difficulty-badges {
+  display: flex;
+  gap: 0.5rem;
+
+  @media (max-width: 480px) {
+    position: absolute;
+    bottom: -9rem;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+}
+
+// Admin-only DRAFT indicator. Public users never see draft tours because the
+// API filters them out — these styles only fire when isAdmin is true.
+.tour-card-draft {
+  position: relative;
+  outline: 2px dashed #f59e0b;
+  outline-offset: -2px;
+}
+
+.card-draft-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  padding: 4px 10px;
+  background-color: #f59e0b;
+  color: #1f2937;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+// Homepage teaser CTA — links the embedded buggy tours into the full
+// /buggy-tours page (matches the enduro listing's view-all button).
+.view-all-cta {
+  display: flex;
+  justify-content: center;
+  margin: 2.5rem 0 1rem;
+}
+
+.view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  @include brand-bg-primary;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  @include theme-transition;
+
+  &:hover:not(:disabled) {
+    background-color: var(--brand-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--brand-accent-strong);
+  }
+
+  mat-icon {
+    font-size: 1.2rem;
+    width: auto;
+    height: auto;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover mat-icon {
+    transform: translateX(3px);
+  }
+
+  @include mobile {
+    width: 100%;
+    justify-content: center;
+  }
+}

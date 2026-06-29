@@ -1,0 +1,22 @@
+<div class="feedback-overlay" (click)="close()">
+  <div
+    class="feedback-dialog"
+    role="alertdialog"
+    aria-modal="true"
+    (click)="$event.stopPropagation()">
+    <button type="button" class="feedback-close" [attr.aria-label]="closeLabel" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <div class="feedback-body">
+      <mat-icon class="feedback-icon" [class.is-error]="type === 'error'">
+        {{ type === 'success' ? 'check_circle' : 'error_outline' }}
+      </mat-icon>
+      <h2 class="feedback-title">{{ title }}</h2>
+      <p class="feedback-message">{{ message }}</p>
+      <button type="button" class="feedback-primary" (click)="close()">
+        {{ closeLabel }}
+      </button>
+    </div>
+  </div>
+</div>

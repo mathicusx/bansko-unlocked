@@ -1,0 +1,132 @@
+<div class="about-container">
+  <div class="about-header">
+    <h1>{{ copy.h1 }}</h1>
+  </div>
+
+  <div class="about-content">
+    <!-- Our Story Section with Visual Elements -->
+    <section class="our-story">
+      <div class="story-grid">
+        <div class="story-text">
+          <h2>{{ copy.story.heading }}</h2>
+          @for (paragraph of copy.story.paragraphs; track $index) {
+            <p [innerHTML]="paragraph"></p>
+          }
+        </div>
+        <div class="story-image">
+          <img src="assets/enduro-gallery/enduro-1.jpg" [alt]="copy.story.imageAlt" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+      <h2>{{ copy.stats.heading }}</h2>
+      <div class="stats-grid">
+        @for (stat of copy.stats.items; track stat.label) {
+          <div class="stat-card">
+            <div class="stat-number">{{ stat.number }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Location & Wildlife Section -->
+    <section class="location-section">
+      <div class="location-grid">
+        <div class="location-image">
+          <img src="assets/enduro-gallery/enduro-3.jpg" [alt]="copy.playground.imageAlt" loading="lazy" />
+        </div>
+        <div class="location-text">
+          <h2>{{ copy.playground.heading }}</h2>
+          @for (paragraph of copy.playground.paragraphs; track $index) {
+            <p [innerHTML]="paragraph"></p>
+          }
+          <div class="highlight-box" [innerHTML]="copy.playground.didYouKnow"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder's Story Section -->
+    <section class="founder-story">
+      <h2>{{ copy.founder.heading }}</h2>
+      <div class="founder-content">
+        <div class="founder-text">
+          <h3>{{ copy.founder.visionHeading }}</h3>
+          @for (paragraph of copy.founder.paragraphs; track $index) {
+            <p>{{ paragraph }}</p>
+          }
+          <div class="founder-quote">
+            <em>{{ copy.founder.quote }}</em>
+          </div>
+        </div>
+        <div class="founder-achievements">
+          <h4>{{ copy.founder.achievementsHeading }}</h4>
+          <ul class="achievement-list">
+            @for (achievement of copy.founder.achievements; track achievement.text) {
+              <li><span class="icon">{{ achievement.icon }}</span> {{ achievement.text }}</li>
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Teaser Section -->
+    <section class="team-teaser">
+      <h2>{{ copy.teamTeaser.heading }}</h2>
+      <p class="team-teaser__lede">{{ copy.teamTeaser.lede }}</p>
+      <div class="team-teaser__photo">
+        <img
+          src="assets/team/meet-the-team.jpeg"
+          [alt]="copy.teamTeaser.photoAlt"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <a routerLink="/team" class="team-teaser__cta">{{ copy.teamTeaser.cta }}</a>
+    </section>
+
+    <!-- Blog Preview Section -->
+    @if (recentPosts.length) {
+    <section class="blog-preview">
+      <h2>{{ copy.blog.heading }}</h2>
+      <p class="blog-preview__lede">{{ copy.blog.lede }}</p>
+      <div class="blog-preview__grid">
+        @for (post of recentPosts; track post.slug) {
+          <a class="blog-card" [routerLink]="['/blog', post.slug]">
+            <div class="blog-card__media">
+              <img [src]="post.heroImage" [alt]="post.heroAlt" loading="lazy" decoding="async" />
+            </div>
+            <div class="blog-card__body">
+              <p class="blog-card__date">{{ post.publishedDate | date:'d MMM yyyy' }}</p>
+              <h3 class="blog-card__title">{{ post.title }}</h3>
+              <p class="blog-card__excerpt">{{ post.description }}</p>
+              <span class="blog-card__read">{{ copy.blog.readMore }}</span>
+            </div>
+          </a>
+        }
+      </div>
+      <a routerLink="/blog" class="blog-preview__all">{{ copy.blog.allPosts }}</a>
+    </section>
+    }
+
+    <!-- Adventure Collection Section -->
+    <section class="adventure-collection">
+      <h2>{{ copy.collection.heading }}</h2>
+      <div class="collection-content">
+        <p class="collection-description">{{ copy.collection.description }}</p>
+        <app-gallery [limit]="12"></app-gallery>
+      </div>
+    </section>
+
+    <!-- Instagram feed hidden for launch (enduro account).
+    <app-instagram-feed></app-instagram-feed>
+    -->
+  </div>
+
+  <!-- Footer -->
+  <footer class="about-footer">
+    <p>{{ copy.copyright }}</p>
+  </footer>
+</div>

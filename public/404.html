@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Page Not Found | Bansko Unlocked</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <style>
+      :root {
+        --bg: #0b1f2a;
+        --text: #eaf6f8;
+        --muted: #9fc4cc;
+        --brand: #2dd4d4;
+        --brand-strong: #0fb5b5;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        text-align: center;
+      }
+      .code {
+        font-size: 6rem;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--brand);
+        text-shadow: 0 0 40px rgba(15, 181, 181, 0.35);
+        margin: 0;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 1.5rem 0 0.75rem;
+      }
+      p {
+        max-width: 36rem;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin: 0 0 2rem;
+      }
+      .actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      a.btn {
+        display: inline-block;
+        padding: 0.85rem 1.6rem;
+        border-radius: 999px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      a.primary {
+        background: linear-gradient(135deg, var(--brand), var(--brand-strong));
+        color: #0b1f2a;
+        box-shadow: 0 8px 24px rgba(15, 181, 181, 0.3);
+      }
+      a.secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      a.btn:hover { transform: translateY(-2px); }
+      @media (max-width: 480px) {
+        .code { font-size: 4.5rem; }
+        h1 { font-size: 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>This trail leads nowhere</h1>
+      <p>The page you were looking for has been moved, renamed, or never existed. Head back to the homepage or browse our Bansko activities.</p>
+      <div class="actions">
+        <a class="btn primary" href="/">Back to homepage</a>
+        <a class="btn secondary" href="/activities">Browse activities</a>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+# Cloudflare Pages redirects.
+#
+# Real files in the output root (every prerendered route folder like /about,
+# /activities/atv-buggy-tours, plus /robots.txt, /sitemap.xml, /llms.txt) are
+# served directly before any rule below fires. These rules only apply to URLs
+# that don't match a real file.
+#
+# Admin routes stay SPA-routed so the client-side auth flow can hand off.
+/admin       /index.html   200
+/admin/*     /index.html   200
+
+# Everything else → the prerendered 404 page with a real 404 status. Prevents a
+# soft-404 (200 + the SPA shell) on unknown URLs.
+/*           /404.html     404

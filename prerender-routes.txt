@@ -1,0 +1,13 @@
+/
+/activities
+/contact
+/about
+/team
+/gallery
+/reviews
+/faq
+/blog
+/activities/atv-buggy-tours
+/activities/shooting-range
+/activities/camping
+/activities/snow-riding

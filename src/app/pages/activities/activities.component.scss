@@ -1,0 +1,106 @@
+@import '../../shared/styles/mixins';
+
+.activities-page {
+  min-height: 100vh;
+  @include bg-primary;
+  @include text-primary;
+  padding: 3rem 1.5rem 4rem;
+
+  &__header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--brand-primary);
+      text-shadow: 0 0 30px var(--brand-accent-strong);
+      margin: 0 0 1rem;
+
+      @include tablet {
+        font-size: 2.2rem;
+      }
+      @include mobile {
+        font-size: 1.8rem;
+      }
+    }
+
+    p {
+      @include text-secondary;
+      font-weight: 300;
+      font-size: 1.2rem;
+      line-height: 1.7;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+}
+
+.activity-card {
+  @include themed-card(0);
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px var(--shadow-medium);
+  }
+
+  &__media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+  }
+
+  &:hover &__media img {
+    transform: scale(1.05);
+  }
+
+  &__body {
+    padding: 1.25rem 1.4rem 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    @include text-primary;
+    margin: 0 0 0.5rem;
+  }
+
+  &__tagline {
+    @include text-secondary;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--accent-readable);
+    font-weight: 600;
+
+    mat-icon {
+      font-size: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+  }
+}
